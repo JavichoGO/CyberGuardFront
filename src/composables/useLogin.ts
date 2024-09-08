@@ -8,13 +8,17 @@ export function useUser() {
   // Computed properties to expose store state
   const modelLogin = computed(() => userStore.modelLogin);
   const users = computed(() => userStore.users);
+  const identification = computed(() => userStore.identification);
+  const roleUser = computed(() => userStore.roleUser);
 
   // Expose store actions
   const fetchLogin = userStore.fetchLogin;
 
   return {
+    identification,
     modelLogin,
     users,
-    fetchLogin
+    fetchLogin,
+    roleUser,
   };
 }

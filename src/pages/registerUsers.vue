@@ -44,7 +44,7 @@ const openModal = () => {
 <template>
     <div class="flex items-center justify-center h-screen">
         <div class="w-1/3 mx-auto p-6 bg-white shadow-md rounded-lg">
-            <h1 class="text-2xl font-bold mb-4">Registrar nuevo usuario</h1>
+            <h1 class="text-2xl font-bold mb-4"> {{ userId ? 'Actualizar' : 'Registrar nuevo' }} usuario</h1>
               <div class="mb-4">
                 <app-input
                   v-model="modelUser.nameAll"
@@ -121,7 +121,7 @@ const openModal = () => {
                   @click="openModal"
                   class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ml-3"
                 >
-                  Registrar
+                {{ userId ? 'Actualizar' : 'Registrar' }}
                 </button>
                 </div>
           </div>

@@ -13,6 +13,7 @@
                 type="text"
                 label="Ingrese valor"
                 id="name-input"
+                @keyup.enter="searchQuestion"
               />
             </div>
             <div class="w-1/4 ml-5">
@@ -29,7 +30,7 @@
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Función NIST</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pregunta</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peso</th>
+              <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peso</th> -->
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
@@ -39,7 +40,7 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.functionQuestions }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.categoryQuestions }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.nameQuestions }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.weight }}</td>
+              <!-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.weight }}</td> -->
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <button class="text-blue-500 hover:text-blue-700" @click="editQuestion(item)">
                   <PencilIcon class="h-6 w-6" />

@@ -4,14 +4,25 @@ import { useUser } from '@/composables/useLogin';
 // import  { useLogin } from '../stores/useLoginStore';
 import  { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { onUnmounted } from 'vue';
 
 const router = useRouter();
-const { modelLogin, fetchLogin } = useUser();
+const { modelLogin, fetchLogin, roleUser } = useUser();
 
 const successUser = async () => {
   await fetchLogin();
-  router.push({ name: 'gestors-user' });
+  debugger;
+  if (roleUser.value == 'ROLE_USER') {
+    router.push({ name: 'respuest' });
+  } else {
+    router.push({ name: 'gestors-user' });
+  }
 }
+
+onUnmounted(() => {
+  modelLogin.value.documentNumber = null;
+  modelLogin.value.password = null;
+})
 </script>
 
 <template>

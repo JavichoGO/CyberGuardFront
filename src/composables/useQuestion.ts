@@ -11,6 +11,7 @@ export function useQuestion() {
     const messageText = computed(() => useQuestion.statusText);
     const getFunctions = computed(() => useQuestion.functions);
     const getCategories = computed(() => useQuestion.categories);
+    const getCategoriesOld = computed(() => useQuestion.categoriesOld);
 
   return {
     modelQuestion,
@@ -21,5 +22,6 @@ export function useQuestion() {
     questionsOld,
     getCategories,
     getFunctions,
+    getCategoriesOld,
   };
 }

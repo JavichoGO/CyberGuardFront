@@ -1,6 +1,8 @@
 import { ref, computed, reactive } from 'vue'
+import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia'
 import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de usar la ruta correcta
+const router = useRouter();
 
 export const useLogin = defineStore('user', {
   state: () => ({
@@ -8,6 +10,8 @@ export const useLogin = defineStore('user', {
       documentNumber: null,
       password: null
     },
+    identification: null,
+    roleUser: null,
     users: [],
   }),
   actions: {
@@ -15,9 +19,11 @@ export const useLogin = defineStore('user', {
       const response = await getLogin(this.modelLogin);
       sessionStorage.setItem('token-user', response.token);
       console.log(response);
-      const response2 = await axiosInstance.get('user/list');
-      this.users = response2.data;
-      console.log(response2);
+      debugger;
+      this.identification = response.username;
+      this.roleUser = response.roles;
+      // const response2 = await axiosInstance.get('user/list');
+      // this.users = response2.data;
     }
   }
 });

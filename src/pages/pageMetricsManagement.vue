@@ -5,7 +5,7 @@ import HexagonalComponent from '../components/HexagonalComponent.vue';
 </script>
 
 <template>
-  <div class="mt-6">
+  <div class="mt-10">
     <h1 class="text-4xl font-bold text-gray-900 text-center mb-7">Gestión de métricas</h1>
     <div class="mb-4 flex items-center px-9">
       <div class="w-1/3">

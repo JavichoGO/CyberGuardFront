@@ -12,6 +12,7 @@
         @input="$emit('update:modelValue', $event.target.value)"
         @focus="onFocus"
         @blur="onBlur"
+        @keyup.enter="$emit('update')"
       />
       <label v-if="label" :for="id" class="absolute top-label left-0 px-2 py-1 text-gray-600 transition-transform transform -translate-y-1 scale-75 origin-top-left">
         {{ label }}

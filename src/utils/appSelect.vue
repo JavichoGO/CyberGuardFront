@@ -2,6 +2,7 @@
 <template>
     <div class="relative inline-block w-full">
       <select
+        :disabled="disabled"
         :value="modelValue"
         @change="handleChange"
         class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -21,6 +22,10 @@
       type: [String, Number],
       default: ''
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     options: {
       type: Array,
       required: true
@@ -30,6 +35,7 @@
   const emit = defineEmits(['update:modelValue']);
   
   function handleChange(event) {
+    console.log(event);
     emit('update:modelValue', event.target.value);
   }
   </script>

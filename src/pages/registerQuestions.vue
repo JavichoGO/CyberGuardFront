@@ -15,7 +15,7 @@ const router = useRouter();
 const route = useRoute();
 const userId = route.params.id;
 const { modelQuestion, fetchRegisterQuestion, getFunctions, getCategories } = useQuestion();
-const { getCatalog } = useQuestionStore();
+const { getCatalog, setFunction } = useQuestionStore();
 
 onMounted(async () => {
   await getCatalog();
@@ -61,21 +61,20 @@ const saveQuestion = async () => {
   toast.success(`Se ${message} correctamente.`);
   router.push({ name: 'gestors-question' })
 }
-
 </script>
 
 <template>
     <main class="flex items-center justify-center h-screen">
         <div class="w-1/3 mx-auto p-6 bg-white shadow-md rounded-lg">
-            <h1 class="text-2xl font-bold mb-4">Registrar nuevo pregunta</h1>
+            <h1 class="text-2xl font-bold mb-4">  {{ userId ? 'Actualizar' : 'Registrar nueva' }}  pregunta</h1>
               <div class="flex justify-between">
                 <div class="mb-7 w-64">
                   <label class="block text-sm font-medium text-gray-700 mb-1">Función NIST</label>
-                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" v-model="modelQuestion.functionQuestions" />
+                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" v-model="modelQuestion.functionQuestions" @update:modelValue="setFunction($event)" />
                 </div>
                 <div class="mb-7 ml-3 w-64">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-                    <app-select :options="getCategories" :model-value="modelQuestion.categoryQuestions" v-model="modelQuestion.categoryQuestions" />
+                    <app-select :options="getCategories" :disabled="!modelQuestion.functionQuestions" :model-value="modelQuestion.categoryQuestions" v-model="modelQuestion.categoryQuestions" />
                   </div>
               </div>
               <div class="mb-7">
@@ -111,7 +110,7 @@ const saveQuestion = async () => {
                   @click="showModal = true"
                   class="w-full ml-3 py-2 px-4 bg-blue-500  text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                  Registrar
+                  {{ userId ? 'Actualizar' : 'Registrar' }}
                 </button>
                 </div>
               

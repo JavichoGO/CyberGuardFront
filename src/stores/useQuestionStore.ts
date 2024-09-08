@@ -38,6 +38,7 @@ state: () => ({
         ],
     },
     categories: [],
+    categoriesOld: [],
     functions: [],
     statusText: '',
 }),
@@ -45,10 +46,12 @@ actions: {
     async registerQuestion(userId: any) {
         const response = userId ? await axiosInstance.put('question/update',  {
             ...this.modelQuestion,
+            idQuestion: userId,
             functionQuestions: Number(this.modelQuestion.functionQuestions),
             categoryQuestions: Number(this.modelQuestion.categoryQuestions),
             options: this.modelQuestion.options.map((row) => {
                 return {
+                    idOption: row.idOption,
                     optionName: row.optionName,
                     optionValue: row.optionValue
                 }
@@ -99,6 +102,7 @@ actions: {
 
       async getCatalog() {
         const response2 = await axiosInstance.get('catalogues/list');
+        this.categoriesOld = response2.data.categoria;
         this.categories = response2.data.categoria;
         this.functions = response2.data.funcion;
       },
@@ -120,6 +124,12 @@ actions: {
             item.categoryQuestions.toString().includes(value)
           );
         }
+      },
+
+      setFunction(value: number) {
+        debugger;
+        this.categories = this.categoriesOld.filter(p => p.parent == value);
+        console.log(value);
       }
 }
 })
