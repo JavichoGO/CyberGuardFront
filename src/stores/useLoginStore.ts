@@ -22,8 +22,8 @@ export const useLogin = defineStore('user', {
       debugger;
       this.identification = response.username;
       this.roleUser = response.roles;
-      // const response2 = await axiosInstance.get('user/list');
-      // this.users = response2.data;
+      const response2 = await axiosInstance.get('user/list');
+      this.users = response2.data;
     }
   }
 });
