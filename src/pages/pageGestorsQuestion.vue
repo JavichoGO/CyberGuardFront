@@ -23,45 +23,43 @@
             </div>
           </div>
         <div class="mt-8 mx-9">
-           <table class="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-md">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro.</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Función NIST</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pregunta</th>
-              <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peso</th> -->
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="item in questions" :key="item.id" class="hover:bg-gray-100">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.number }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.functionQuestions }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.categoryQuestions }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.nameQuestions }}</td>
-              <!-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.weight }}</td> -->
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <button class="text-blue-500 hover:text-blue-700" @click="editQuestion(item)">
-                  <PencilIcon class="h-6 w-6" />
-                </button>
-                <button class="text-red-500 hover:text-red-700 ml-4" @click="openDialog(item.id)">
-                  <TrashIcon class="h-6 w-6" />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-md">
+  <thead class="bg-gray-50">
+    <tr>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro.</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Función NIST</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs truncate">Categoria</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-md truncate">Pregunta</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+    </tr>
+  </thead>
+  <tbody class="bg-white divide-y divide-gray-200">
+    <tr v-for="item in questions" :key="item.id" class="hover:bg-gray-100">
+      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.number }}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.functionQuestionsDescription }}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate" :title="item.categoryQuestionsDescription">{{ item.categoryQuestionsDescription }}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-2xl truncate" :title="item.nameQuestions">{{ item.nameQuestions }}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        <button class="text-blue-500 hover:text-blue-700" @click="editQuestion(item)">
+          <PencilIcon class="h-6 w-6" />
+        </button>
+        <button class="text-red-500 hover:text-red-700 ml-4" @click="openDialog(item.id)">
+          <TrashIcon class="h-6 w-6" />
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
         </div>   
         <Modal
         :isOpen="showModal"
         title="Confirmación"
-        message="¿Desea registrar al nuevo usuario?"
+        message="¿Desea eliminar la pregunta?"
         @update:isOpen="showModal = $event"
         @confirm="deleteQuestion"
       />
     </div>
-    <!-- @confirm="saveUsers" -->
+    <!-- @confirm="saveQuestion" -->
 </template>
 
 <script setup>

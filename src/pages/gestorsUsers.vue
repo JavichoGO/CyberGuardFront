@@ -90,7 +90,7 @@ const searchUsers = () => {
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="item in users" :key="item.id" class="hover:bg-gray-100">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.number }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.nameAll }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate">{{ item.nameAll }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.identification }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <button class="text-blue-500 hover:text-blue-700" @click="editUser(item)">
