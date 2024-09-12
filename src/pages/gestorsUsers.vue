@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import appInput from '../utils/appInput.vue';
 import { useUser } from '@/composables/useUsers';
-import { storeGetters } from '../stores/useUserStore';
+import { storeUsers } from '../stores/useUserStore';
 import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
@@ -12,18 +12,20 @@ const toast = useToast()
 const router = useRouter();
 const showModal = ref(false);
 const idUser = ref(null);
-const { getUsers, setUser, filteredUsers, actionDeleteUser } = storeGetters();
-const { users } = useUser();
+// const storeUser = storeUsers()
+const { getHttpUser, setUser, filteredUsers, actionDeleteUser } = storeUsers();
+const { users, fetchUsers } = useUser();
 
 const searchQuery = ref(null);
 
+
 onMounted(async () => {
-  await getUsers();
+  await getHttpUser();
 })
 
 const deleteUser = async () => {
   await actionDeleteUser(idUser.value);
-  await getUsers();
+  await getHttpUser();
   toast.success('Se desactivo el usuario correctamente.');
 }
 

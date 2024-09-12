@@ -1,8 +1,8 @@
 import { computed } from 'vue';
-import { storeGetters } from '@/stores/useUserStore'; // Asegúrate de usar la ruta correcta
+import { storeUsers } from '@/stores/useUserStore'; // Asegúrate de usar la ruta correcta
 
 export function useUser() {
-  const userStore = storeGetters();
+  const userStore = storeUsers();
 
   // Computed properties to expose store state
   const users = computed(() => userStore.users);

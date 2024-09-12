@@ -8,6 +8,7 @@ import metricsManagement from '@/pages/pageMetricsManagement.vue'
 import gestorsQuestion from '@/pages/pageGestorsQuestion.vue'
 import viewPassword from '@/views/viewPassword.vue'
 import viewForm from '@/pages/pageFormUsers.vue'
+import pageAnswerQuestions from '@/pages/pageAnswerQuestions.vue';
 
 
 const router = createRouter({
@@ -52,6 +53,11 @@ const router = createRouter({
       path: '/respuest',
       name: 'respuest',
       component: viewForm
+    },
+    {
+      path: '/answer-question',
+      name: 'answer-question',
+      component: pageAnswerQuestions,
     },
   ]
 })

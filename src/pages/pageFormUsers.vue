@@ -2,13 +2,17 @@
 import Modal from '../utils/appModal.vue';
 import { onMounted, ref } from 'vue';
 import { useForm } from '../composables/useForm';
+import { useRouter } from 'vue-router';
 
 const { getQuestionsP, getForm } = useForm();
+const router = useRouter();
+
 
 const showModal = ref(false);
 
 const postForm = async () => {
     await getQuestionsP();
+    router.push({ name: 'answer-question' });
 }
 
 const openDialog = () => {
@@ -31,24 +35,6 @@ const openDialog = () => {
          Iniciar test
         </button>
         </div>
-        <div v-for="(item, index) in getForm?.questions" :key="index">
-           {{ index + 1 }}.  {{ item.nameQuestion }}
-           <div>
-            <label v-for="option in item.optionsList" :key="option.value" class="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  :value="option.value"
-                  class="form-radio text-blue-500"
-                />
-                <span class="text-gray-700">{{ option.nameOption }}</span>
-              </label>
-           </div>
-        </div>
-        <button
-            class="bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none"
-        >
-        Siguiente
-        </button>
         <Modal
             :isOpen="showModal"
             title=""

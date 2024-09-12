@@ -1,27 +1,35 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 const router = useRouter();
+const show = ref(false);
+const fullName = ref<string>('');
+
+fullName.value = sessionStorage.getItem('full-name');
+
+const roleUser = sessionStorage.getItem('user-role') || '';
 
 const loginOut = () => {
-  debugger;
   sessionStorage.removeItem('token-user');
+  sessionStorage.removeItem('user-role');
+  sessionStorage.removeItem('full-name');
   router.push({ name: 'home' });
 }
 </script>
 
 <template>
-  <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <nav class="fixed flex justify-end top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
     <div class="px-3 py-2 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="relative">
-          <button class="flex items-center space-x-2 dark:text-white p-2 rounded transition">
+          <button @click="show = !show" class="flex items-center space-x-2 dark:text-white p-2 rounded transition">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
             </svg>          
-            <span class="hidden sm:block">Profile</span>
+            <span class="hidden sm:block">{{ fullName }}</span>
           </button>
-          <div v-if="true" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+          <div v-if="show" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
             <button @click="loginOut" class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100">Cerrar sesión</button>
           </div>
         </div>
@@ -73,7 +81,7 @@ const loginOut = () => {
       Menu
     </h5>
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 pt-6">
-        <ul class="space-y-2 font-medium">
+        <ul class="space-y-2 font-medium" v-if="roleUser == 'ROLE_ADMIN'">
            <li> 
             <router-link :to="{ name: 'gestors-user' }">
               <a  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -106,7 +114,7 @@ const loginOut = () => {
             </router-link>
            </li>
         </ul>
-        <ul>
+        <ul v-else>
           <li>
             <router-link :to="{ name: 'metrics-management' }">
               <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">

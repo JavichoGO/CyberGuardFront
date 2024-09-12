@@ -2,7 +2,6 @@ import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia'
 import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de usar la ruta correcta
-const router = useRouter();
 
 export const useFormStore = defineStore('user', {
   state: () => ({

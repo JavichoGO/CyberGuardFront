@@ -10,6 +10,7 @@ export function useUser() {
   const users = computed(() => userStore.users);
   const identification = computed(() => userStore.identification);
   const roleUser = computed(() => userStore.roleUser);
+  const fullName = computed(() => userStore.fullName);
 
   // Expose store actions
   const fetchLogin = userStore.fetchLogin;
@@ -18,6 +19,7 @@ export function useUser() {
     identification,
     modelLogin,
     users,
+    fullName,
     fetchLogin,
     roleUser,
   };
