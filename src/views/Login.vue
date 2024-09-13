@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router';
 import { onUnmounted } from 'vue';
 
 const router = useRouter();
-const { modelLogin, fetchLogin, roleUser } = useUser();
+const { modelLogin, fetchLogin, roleUser, showSidebar } = useUser();
 
 const successUser = async () => {
   await fetchLogin();
@@ -17,6 +17,7 @@ const successUser = async () => {
   } else {
     router.push({ name: 'gestors-user' });
   }
+  showSidebar.value = true;
 }
 
 onUnmounted(() => {

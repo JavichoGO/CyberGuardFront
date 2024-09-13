@@ -11,11 +11,13 @@ export function useUser() {
   const identification = computed(() => userStore.identification);
   const roleUser = computed(() => userStore.roleUser);
   const fullName = computed(() => userStore.fullName);
+  const showSidebar = computed(() => userStore.showSidebar);
 
   // Expose store actions
   const fetchLogin = userStore.fetchLogin;
 
   return {
+    showSidebar,
     identification,
     modelLogin,
     users,

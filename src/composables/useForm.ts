@@ -5,11 +5,13 @@ export function useForm() {
   const userStore = useFormStore();
 
   // Expose store actions
-  const getQuestionsP = userStore.fetchQuestion;
+  const getQuestions = userStore.fetchQuestion;
+  const getIdentify = computed(() => userStore.questionsIdentify);
   const getForm = computed(() => userStore.forms);
 
   return {
-    getQuestionsP,
+    getQuestions,
+    getIdentify,
     getForm,
   };
 }

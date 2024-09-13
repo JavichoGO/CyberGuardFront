@@ -4,15 +4,15 @@ import { onMounted, ref } from 'vue';
 import { useForm } from '../composables/useForm';
 import { useRouter } from 'vue-router';
 
-const { getQuestionsP, getForm } = useForm();
+const { getQuestions, getForm } = useForm();
 const router = useRouter();
 
 
 const showModal = ref(false);
 
 const postForm = async () => {
-    await getQuestionsP();
     router.push({ name: 'answer-question' });
+    await getQuestions();
 }
 
 const openDialog = () => {

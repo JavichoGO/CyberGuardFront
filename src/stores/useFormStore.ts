@@ -6,13 +6,16 @@ import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de
 export const useFormStore = defineStore('user', {
   state: () => ({
     forms: [],
+    questionsIdentify: null,
   }),
   actions: {
    async fetchQuestion() {
+    debugger;
       const response = await axiosInstance.post('question-user/find', {
         identification: '1234567',
       });
-      this.forms = response.data.data;
+      this.forms = response.data.data.questions;
+      this.questionsIdentify = response.data.data.questions.IDENTIFY;
       console.log(response);
     }
   }

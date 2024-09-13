@@ -8,6 +8,7 @@ export const useLogin = defineStore('user', {
       documentNumber: null,
       password: null
     },
+    showSidebar: false,
     identification: null,
     roleUser: null,
     users: [],

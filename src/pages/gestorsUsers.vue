@@ -54,7 +54,7 @@ const searchUsers = () => {
 </script>
 
 <template>
-    <div class="mt-10">
+    <div>
         <h1 class="text-4xl font-bold text-gray-900 text-center">Gestión de usuarios</h1>
         <div class="flex justify-end px-8 mt-3">
             <button @click="router.push({ name: 'register-user' })" class="bg-blue-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useForm } from '../composables/useForm';
 
-const { getQuestionsP, getForm } = useForm();
+const { getIdentify, getForm } = useForm();
 </script>
 
 <template>
-    <div v-for="(item, index) in getForm?.questions" :key="index">
-        {{ index + 1 }}.  {{ item.nameQuestion }}
+  <!-- {{ getIdentify }} -->
+    <div v-for="(item, index) in getIdentify" :key="index">
+        {{ index + 1 }}.  {{ item.categoryQuestionsDescription }}
         <div>
          <label v-for="option in item.optionsList" :key="option.value" class="flex items-center space-x-2 cursor-pointer">
              <input
