@@ -12,11 +12,16 @@ export function useUser() {
   const roleUser = computed(() => userStore.roleUser);
   const fullName = computed(() => userStore.fullName);
   const showSidebar = computed(() => userStore.showSidebar);
+  debugger;
+  const emailRecoveryComputed = computed(() => userStore.recoveryPassword);
 
   // Expose store actions
   const fetchLogin = userStore.fetchLogin;
+  const fetchResetPassword = userStore.fetchResetPassword;
 
   return {
+    emailRecoveryComputed,
+    fetchResetPassword,
     showSidebar,
     identification,
     modelLogin,

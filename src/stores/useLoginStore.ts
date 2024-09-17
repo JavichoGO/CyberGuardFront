@@ -13,6 +13,9 @@ export const useLogin = defineStore('user', {
     roleUser: null,
     users: [],
     fullName: '',
+    recoveryPassword: {
+      emailRecovery: null,
+    }
   }),
   actions: {
    async fetchLogin() {
@@ -20,11 +23,20 @@ export const useLogin = defineStore('user', {
       sessionStorage.setItem('token-user', response.token);
       sessionStorage.setItem('full-name', response.fullName);
       sessionStorage.setItem('user-role', response.roles);
+      sessionStorage.setItem('identification', response.username);
       this.identification = response.username;
       this.roleUser = response.roles;
       // this.fullName = response.fullName;
       // const response2 = await axiosInstance.get('user/list');
       // this.users = response2.data;
+    },
+
+    async fetchResetPassword() {
+      debugger;
+      const response2 = await axiosInstance.post('user/recovery', { 
+        email: this.recoveryPassword.emailRecovery,
+      });
+      console.log(response2)
     }
   }
 });

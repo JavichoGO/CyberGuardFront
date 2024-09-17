@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import Modal from '../utils/appModal.vue';
 import { onMounted, ref } from 'vue';
 import { useForm } from '../composables/useForm';
 import { useRouter } from 'vue-router';
+import { useFormStore } from '../stores/useFormStore';
+import  { storeToRefs } from 'pinia';
+import Modal from '../utils/appModal.vue';
 
-const { getQuestions, getForm } = useForm();
+const { fetchQuestions } = useForm();
+const store = useFormStore();
+// const { fetchQuestion } = storeToRefs(store);
 const router = useRouter();
 
 
@@ -12,7 +16,7 @@ const showModal = ref(false);
 
 const postForm = async () => {
     router.push({ name: 'answer-question' });
-    await getQuestions();
+    await fetchQuestions();
 }
 
 const openDialog = () => {
@@ -22,7 +26,7 @@ const openDialog = () => {
 
 
 <template>
-    <div class="mt-12">
+    <div class="mt-2">
         <h1 class="text-4xl font-bold text-gray-900 text-center mb-10 mt-10">Cuestionario PWC</h1>
         <h2 class="text-2xl text-center">
             Este formulario está diseñado para determinar el grado de madurez de las Cajas Municipales de Ahorro y Crédito (CMAC) en el Perú a través de su punto de vista como integrante de la empresa auditora PWC.

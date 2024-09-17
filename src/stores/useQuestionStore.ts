@@ -69,7 +69,6 @@ actions: {
             })
         }
         );
-        console.log(response);
     },
 
     setQuestion(row: any) {
