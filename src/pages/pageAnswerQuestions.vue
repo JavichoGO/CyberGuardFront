@@ -34,7 +34,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
         <div>
         <label v-for="(option, index) in item.optionsList" :key="index" class="flex items-center space-x-2 cursor-pointer">
             <input
-              :name="'option-' + index"
+              :name="'option-' + indexHeader"
               type="radio"
               :value="option.id"
               v-model="responses[indexHeader]"
@@ -60,13 +60,16 @@ const responses = ref(new Array(getIdentify.length).fill(null));
     </div>
     </div>
     <div v-if="formularioActual === 2">
-      <div v-for="(item, index) in getDetected" :key="index" class="mb-4">
-        {{ index + 1 }}.  {{ item.categoryQuestionsDescription }}
+      <div class="text-2xl font-bold mb-6">{{getDetected[0].functionQuestionsDescription }} </div>
+      <div v-for="(item, indexHeader) in getDetected" :key="indexHeader" class="mb-4">
+        {{ indexHeader + 1 }}.  {{ item.nameQuestion }}
         <div>
-        <label v-for="option in item.optionsList" :key="option.value" class="flex items-center space-x-2 cursor-pointer">
+        <label v-for="(option, index) in item.optionsList" :key="index" class="flex items-center space-x-2 cursor-pointer">
             <input
-              type="radio"
-              :value="option.value"
+            :name="'option-' + index"
+            type="radio"
+            :value="option.id"
+            v-model="responses[indexHeader]"
               class="form-radio text-blue-500"
             />
             <span class="text-gray-700">{{ option.nameOption }}</span>
@@ -89,13 +92,16 @@ const responses = ref(new Array(getIdentify.length).fill(null));
     </div>
     </div>
     <div v-if="formularioActual === 3">
-      <div v-for="(item, index) in getProtect" :key="index" class="mb-4">
-        {{ index + 1 }}.  {{ item.categoryQuestionsDescription }}
+      <div class="text-2xl font-bold mb-6">{{getProtect[0].functionQuestionsDescription }} </div>
+      <div v-for="(item, indexHeader)  in getProtect" :key="indexHeader" class="mb-4">
+        {{ indexHeader + 1 }}.  {{ item.nameQuestion }}
         <div>
         <label v-for="option in item.optionsList" :key="option.value" class="flex items-center space-x-2 cursor-pointer">
             <input
-              type="radio"
-              :value="option.value"
+            :name="'option-' + indexHeader"
+            type="radio"
+            :value="option.id"
+            v-model="responses[indexHeader]"
               class="form-radio text-blue-500"
             />
             <span class="text-gray-700">{{ option.nameOption }}</span>
@@ -118,13 +124,16 @@ const responses = ref(new Array(getIdentify.length).fill(null));
     </div>
     </div>
     <div v-if="formularioActual === 4">
-      <div v-for="(item, index) in getRecover" :key="index" class="mb-4">
-        {{ index + 1 }}.  {{ item.categoryQuestionsDescription }}
+      <div class="text-2xl font-bold mb-6">{{getRecover[0].functionQuestionsDescription }} </div>
+      <div v-for="(item, indexHeader) in getRecover" :key="indexHeader" class="mb-4">
+        {{ indexHeader + 1 }}.  {{ item.nameQuestion }}
         <div>
         <label v-for="option in item.optionsList" :key="option.value" class="flex items-center space-x-2 cursor-pointer">
             <input
-              type="radio"
-              :value="option.value"
+            :name="'option-' + indexHeader"
+            type="radio"
+            :value="option.id"
+            v-model="responses[indexHeader]"
               class="form-radio text-blue-500"
             />
             <span class="text-gray-700">{{ option.nameOption }}</span>
@@ -147,13 +156,16 @@ const responses = ref(new Array(getIdentify.length).fill(null));
     </div>
     </div>
     <div v-if="formularioActual === 5">
-      <div v-for="(item, index) in getRespond" :key="index" class="mb-4">
-        {{ index + 1 }}.  {{ item.categoryQuestionsDescription }}
+      <div class="text-2xl font-bold mb-6">{{getRespond[0].functionQuestionsDescription }} </div>
+      <div v-for="(item, indexHeader) in getRespond" :key="indexHeader" class="mb-4">
+        {{ indexHeader + 1 }}.  {{ item.categoryQuestionsDescription }}
         <div>
         <label v-for="option in item.optionsList" :key="option.value" class="flex items-center space-x-2 cursor-pointer">
             <input
-              type="radio"
-              :value="option.value"
+            :name="'option-' + indexHeader"
+            type="radio"
+            :value="option.id"
+            v-model="responses[indexHeader]"
               class="form-radio text-blue-500"
             />
             <span class="text-gray-700">{{ option.nameOption }}</span>
