@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute} from 'vue-router';
 
 import { useForm } from '../composables/useForm';
 import { useFormStore } from '../stores/useFormStore';
@@ -21,23 +21,26 @@ const saveQuestions = async () => {
   await fetchSaveQuestion();
   console.log('respuesta');
 } 
+
+const responses = ref(new Array(getIdentify.length).fill(null));
 </script>
 
 <template>
   <div>
     <div v-if="formularioActual === 1">
-      <div v-for="(item, index) in getIdentify" :key="index" class="mb-4">
-        {{ index + 1 }}.  {{ item.categoryQuestionsDescription }}
+      <div class="text-2xl font-bold mb-6">{{getIdentify[0].functionQuestionsDescription }} </div>
+      <div v-for="(item, indexHeader) in getIdentify" :key="indexHeader" class="mb-4">
+        {{ indexHeader + 1 }}.  {{ item.nameQuestion }}
         <div>
         <label v-for="(option, index) in item.optionsList" :key="index" class="flex items-center space-x-2 cursor-pointer">
             <input
-              :id="`option${index}`"
+              :name="'option-' + index"
               type="radio"
-              :value="option.value"
-              v-model="option.optionValue"
+              :value="option.id"
+              v-model="responses[indexHeader]"
               class="form-radio text-blue-500"
             />
-            <span class="text-gray-700">{{ option.nameOption }}</span>
+            <span :for="`option-${index}`" class="text-gray-700">{{ option.nameOption }}</span>
           </label>
         </div>
     </div>
