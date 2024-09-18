@@ -23,7 +23,6 @@ export const storeUsers = defineStore('userStore', {
   }),
   actions: {
     async getHttpUser() {
-      debugger;
       try {
         const response2 = await axiosInstance.get('user/list');
         this.usersOrigin = response2?.data.map((row: any, index: number) => {

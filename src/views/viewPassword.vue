@@ -9,7 +9,6 @@ const router = useRouter();
 const {  fetchResetPassword, emailRecoveryComputed } = useUser();
 
 const actionResetPassword = async () => {
-  debugger;
   await fetchResetPassword();
 }
 </script>

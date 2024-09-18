@@ -9,6 +9,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :class="inputClasses"
+        maxlength="20"  
         @input="$emit('update:modelValue', $event.target.value)"
         @focus="onFocus"
         @blur="onBlur"

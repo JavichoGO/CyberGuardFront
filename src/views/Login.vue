@@ -11,7 +11,6 @@ const { modelLogin, fetchLogin, roleUser, showSidebar } = useUser();
 
 const successUser = async () => {
   await fetchLogin();
-  debugger;
   if (roleUser.value == 'ROLE_USER') {
     router.push({ name: 'respuest' });
   } else {

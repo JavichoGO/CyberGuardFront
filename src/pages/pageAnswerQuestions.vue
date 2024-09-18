@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter, useRoute} from 'vue-router';
-
+import Modal from '../utils/appModal.vue';
 import { useForm } from '../composables/useForm';
 import { useFormStore } from '../stores/useFormStore';
 import { ref } from 'vue';
@@ -13,14 +13,21 @@ const { fetchSaveQuestion } = useFormStore();
 const formularioActual = ref(1);
 
 const changePage = (numero: number) => {
-  debugger;
   formularioActual.value = numero;
 };
 
-const saveQuestions = async () => {
-  await fetchSaveQuestion();
+const showModal = ref(false);
+
+
+const saveQuestions = () => {
+  showModal.value = true;
   console.log('respuesta');
-} 
+}
+
+const save = async () => {
+  await fetchSaveQuestion();
+  router.push({ name: 'respuest', query: { isSolution: true } });
+}
 
 const responses = ref(new Array(getIdentify.length).fill(null));
 </script>
@@ -37,7 +44,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
               :name="'option-' + indexHeader"
               type="radio"
               :value="option.id"
-              v-model="responses[indexHeader]"
+              v-model="getIdentify[indexHeader].optionValue"
               class="form-radio text-blue-500"
             />
             <span :for="`option-${index}`" class="text-gray-700">{{ option.nameOption }}</span>
@@ -66,10 +73,10 @@ const responses = ref(new Array(getIdentify.length).fill(null));
         <div>
         <label v-for="(option, index) in item.optionsList" :key="index" class="flex items-center space-x-2 cursor-pointer">
             <input
-            :name="'option-' + index"
+            :name="'option-' + indexHeader"
             type="radio"
             :value="option.id"
-            v-model="responses[indexHeader]"
+            v-model="getDetected[indexHeader].optionValue"
               class="form-radio text-blue-500"
             />
             <span class="text-gray-700">{{ option.nameOption }}</span>
@@ -101,7 +108,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
             :name="'option-' + indexHeader"
             type="radio"
             :value="option.id"
-            v-model="responses[indexHeader]"
+            v-model="getProtect[indexHeader].optionValue"
               class="form-radio text-blue-500"
             />
             <span class="text-gray-700">{{ option.nameOption }}</span>
@@ -133,7 +140,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
             :name="'option-' + indexHeader"
             type="radio"
             :value="option.id"
-            v-model="responses[indexHeader]"
+            v-model="getRecover[indexHeader].optionValue"
               class="form-radio text-blue-500"
             />
             <span class="text-gray-700">{{ option.nameOption }}</span>
@@ -165,7 +172,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
             :name="'option-' + indexHeader"
             type="radio"
             :value="option.id"
-            v-model="responses[indexHeader]"
+            v-model="getRespond[indexHeader].optionValue"
               class="form-radio text-blue-500"
             />
             <span class="text-gray-700">{{ option.nameOption }}</span>
@@ -187,5 +194,12 @@ const responses = ref(new Array(getIdentify.length).fill(null));
   </button>
     </div>
     </div>
+    <Modal
+    :isOpen="showModal"
+    title="Registro cuestionario"
+    message="Desea enviar el cuestionario ?"
+    @update:isOpen="showModal = $event"
+    @confirm="save"
+  />
   </div>
 </template>

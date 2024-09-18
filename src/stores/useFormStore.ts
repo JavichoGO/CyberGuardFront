@@ -14,7 +14,6 @@ export const useFormStore = defineStore('form', {
   }),
   actions: {
    async getQuestionIdentification() {
-    debugger;
     const identiicationUser = sessionStorage.getItem('identification');
       const response = await axiosInstance.post('question-user/find', {
         identification: identiicationUser,
@@ -27,41 +26,40 @@ export const useFormStore = defineStore('form', {
       this.questionRespond = response.data.data.questions.RESPOND;
     },
     async fetchSaveQuestion() {
-      debugger;
-      const arrayQuestion = this.questionsIdentify.optionsList.map((row: any) => {
+      const arrayQuestion = this.questionsIdentify.map((row: any) => {
         return {
-          questionId: row.id,
+          questionId: row.idQuestion,
           optionValue: row.optionValue,
         }
       });
-      const arrayDetected = this.questionDetect.optionsList.map((row: any) => {
+      const arrayDetected = this.questionDetect.map((row: any) => {
         return {
-          questionId: row.id,
+          questionId: row.idQuestion,
           optionValue: row.optionValue,
         }
       });
-      const arrayProtect = this.questionProtect.optionsList.map((row: any) => {
+      const arrayProtect = this.questionProtect.map((row: any) => {
         return {
-          questionId: row.id,
+          questionId: row.idQuestion,
           optionValue: row.optionValue,
         }
       });
-      const arrayRecover = this.questionRecover.optionsList.map((row: any) => {
+      const arrayRecover = this.questionRecover.map((row: any) => {
         return {
-          questionId: row.id,
+          questionId: row.idQuestion,
           optionValue: row.optionValue,
         }
       });
-      const arrayRespond = this.questionRespond.optionsList.map((row: any) => {
+      const arrayRespond = this.questionRespond.map((row: any) => {
         return {
-          questionId: row.id,
+          questionId: row.idQuestion,
           optionValue: row.optionValue,
         }
       });
-      const arrayCompleted = [...arrayQuestion, ...arrayDetected, ...arrayProtect, ...arrayRecover, ...arrayRespond];
-      console.log(arrayCompleted);
+      const responses = [...arrayQuestion, ...arrayDetected, ...arrayProtect, ...arrayRecover, ...arrayRespond];
+      console.log(responses);
       const response = await axiosInstance.post('question-user/save/answers', {
-        ...arrayCompleted,
+        responses,
       });
       console.log(response);
     }
