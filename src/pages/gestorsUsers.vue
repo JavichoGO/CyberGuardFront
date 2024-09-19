@@ -69,6 +69,7 @@ const searchUsers = () => {
                 label="Ingrese valor"
                 required
                 id="name-input"
+                maxLength="50"
               />
             </div>
             <div class="w-1/4 ml-5">

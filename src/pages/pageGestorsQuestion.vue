@@ -12,6 +12,7 @@
                 v-model="searchQuery"
                 type="text"
                 label="Ingrese valor"
+                maxLength="50"
                 id="name-input"
                 @keyup.enter="searchQuestion"
               />
