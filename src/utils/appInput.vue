@@ -9,7 +9,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :class="inputClasses"
-        maxlength="20"  
+        :maxLength="maxLength"
         @input="$emit('update:modelValue', $event.target.value)"
         @focus="onFocus"
         @blur="onBlur"
@@ -31,6 +31,7 @@
       type: String,
       default: 'text'
     },
+    maxLength: Number,
     id: String,
     name: String,
     placeholder: String,

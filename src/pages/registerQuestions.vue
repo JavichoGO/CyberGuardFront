@@ -82,6 +82,7 @@ const saveQuestion = async () => {
                   v-model="modelQuestion.nameQuestions"
                   id="question"
                   name="question"
+                  maxLength="50"
                   type="text"
                   label="Pregunta"
                   required
@@ -95,6 +96,7 @@ const saveQuestion = async () => {
 									:label="item.label"
 									placeholder="Ingresar alternativa"
 									required
+                  maxLength="50"
 									id="name-password"
 								/>
               </div>

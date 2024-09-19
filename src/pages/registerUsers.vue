@@ -50,6 +50,7 @@ const openModal = () => {
                   v-model="modelUser.nameAll"
                   id="fullName"
                   required
+                  maxLength="50"
                   name="fullName"
                   type="text"
                   label="Nombre completo"
@@ -61,6 +62,7 @@ const openModal = () => {
                   v-model="modelUser.identification"
                   id="document"
                   required
+                  maxLength="20"
                   name="document"
                   type="number"
                   label="Número de DNI (usuario)"
@@ -75,6 +77,7 @@ const openModal = () => {
                   type="text"
                   label="Cargo"
                   required
+                  maxLength="50"
                   placeholder="Ingrese el cargo"
                 />
                 </div>
@@ -107,6 +110,7 @@ const openModal = () => {
                     type="text"
                     label="Contraseña"
                     required
+                    maxLength="50"
                     placeholder="Ingrese la contraseña"
                   />
                 </div>
