@@ -126,9 +126,7 @@ actions: {
       },
 
       setFunction(value: number) {
-        debugger;
         this.categories = this.categoriesOld.filter(p => p.parent == value);
-        console.log(value);
       }
 }
 })

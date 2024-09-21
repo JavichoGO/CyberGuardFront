@@ -32,7 +32,6 @@ export const useLogin = defineStore('user', {
     },
 
     async fetchResetPassword() {
-      debugger;
       const response2 = await axiosInstance.post('user/recovery', { 
         email: this.recoveryPassword.emailRecovery,
       });

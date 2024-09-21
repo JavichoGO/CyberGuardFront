@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://question-jav.up.railway.app/'; // Reemplaza con tu URL de API
+const API_URL = 'https://cyberguard.up.railway.app/'; // Reemplaza con tu URL de API
 
 export const getLogin = async (data: any) => {
     console.log(data);

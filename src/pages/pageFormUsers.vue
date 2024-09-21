@@ -6,11 +6,13 @@ import { useFormStore } from '../stores/useFormStore';
 import  { storeToRefs } from 'pinia';
 import Modal from '../utils/appModal.vue';
 
-const { fetchQuestions } = useForm();
+const { fetchQuestions, getShowFinished, fetchUpdate } = useForm();
 const store = useFormStore();
 // const { fetchQuestion } = storeToRefs(store);
 const router = useRouter();
 const route = useRoute();
+
+const showValidCompleted = ref(false);
 
 const validationPage = ref(route.query.isSolution)
 console.log(validationPage);
@@ -19,13 +21,26 @@ console.log(validationPage);
 const showModal = ref(false);
 
 const postForm = async () => {
-    router.push({ name: 'answer-question' });
+    await fetchUpdate();
     await fetchQuestions();
+    router.push({ name: 'answer-question' });
 }
 
 const openDialog = () => {
-    showModal.value = true;
+    if (getShowFinished.value) { 
+        showValidCompleted.value = true;
+    } else {
+        showModal.value = true;
+    }
 }
+
+const resetQuestionFunction = () => {
+    postForm();
+}
+
+onMounted(async () => {
+  await fetchQuestions();
+})
 </script>
 
 
@@ -65,5 +80,12 @@ const openDialog = () => {
             @update:isOpen="showModal = $event"
             @confirm="postForm"
           />
+          <Modal
+          :isOpen="showValidCompleted"
+          title="Desea realizar nuevamente el cuestionario ?"
+          message="Se eliminará la encuesta realizada previamente"
+          @update:isOpen="showValidCompleted = $event"
+          @confirm="resetQuestionFunction"
+        />
     </div>
 </template>

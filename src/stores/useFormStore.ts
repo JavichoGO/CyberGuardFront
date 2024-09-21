@@ -6,6 +6,7 @@ import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de
 export const useFormStore = defineStore('form', {
   state: () => ({
     forms: [],
+    showFinish: null,
     questionsIdentify: null,
     questionDetect: null,
     questionProtect: null,
@@ -18,6 +19,7 @@ export const useFormStore = defineStore('form', {
       const response = await axiosInstance.post('question-user/find', {
         identification: identiicationUser,
       });
+      this.showFinish = response.data.data.finish;
       this.forms = response.data.data.questions;
       this.questionsIdentify = response.data.data.questions.IDENTIFY;
       this.questionDetect = response.data.data.questions.DETECT;
@@ -61,6 +63,11 @@ export const useFormStore = defineStore('form', {
       const response = await axiosInstance.post('question-user/save/answers', {
         responses,
       });
+      console.log(response);
+    },
+    async resetQuestion() {
+      const identiicationUser = sessionStorage.getItem('identification');
+      const response = await axiosInstance.get(`user/create/new/question/${identiicationUser}`);
       console.log(response);
     }
   }

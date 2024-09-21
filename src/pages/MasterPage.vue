@@ -13,7 +13,7 @@ tokenValue.value = sessionStorage.getItem('token-user');
     <div class="flex-1 flex flex-col">
       <Header v-if="!!tokenValue" />
       <main class="flex-1 p-6"   :class="[
-        tokenValue ? 'ml-64 mt-20 h-full h-screen bg-gray-100' : null
+        tokenValue ? 'ml-64 mt-12 h-full h-screen bg-gray-100' : null
       ]">
         <router-view />
       </main>

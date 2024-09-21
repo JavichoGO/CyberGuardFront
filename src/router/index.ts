@@ -10,6 +10,7 @@ import gestorsQuestion from '@/pages/pageGestorsQuestion.vue'
 import viewPassword from '@/views/viewPassword.vue'
 import viewForm from '@/pages/pageFormUsers.vue'
 import pageAnswerQuestions from '@/pages/pageAnswerQuestions.vue';
+import resetPassword from '@/pages/restartPassword.vue';
 
 
 const router = createRouter({
@@ -63,6 +64,11 @@ const router = createRouter({
           path: '/answer-question',
           name: 'answer-question',
           component: pageAnswerQuestions,
+        },
+        {
+          path: '/reset-password',
+          name: 'reset-password',
+          component: resetPassword,
         },
       ],
       component: MasterPage

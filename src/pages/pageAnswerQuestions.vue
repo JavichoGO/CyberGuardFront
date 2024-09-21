@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useRouter, useRoute} from 'vue-router';
+import { onMounted, ref } from 'vue';
 import Modal from '../utils/appModal.vue';
 import { useForm } from '../composables/useForm';
 import { useFormStore } from '../stores/useFormStore';
-import { ref } from 'vue';
 
 const { getIdentify, getForm, getDetected, getProtect, getRecover, getRespond } = useForm();
 
@@ -12,16 +12,46 @@ const router = useRouter();
 const { fetchSaveQuestion } = useFormStore();
 const formularioActual = ref(1);
 
-const changePage = (numero: number) => {
-  formularioActual.value = numero;
+// onMounted(async () => {
+//   await fetchQuestions();
+// })
+
+const validArray = (code: string) => {
+  if (code == 'identify') {
+    const validForm = getIdentify.value.every(row => row.optionValue);
+    return validForm;
+  } else if (code == 'detected') {
+    const validForm = getDetected.value.every(row => row.optionValue);
+    return validForm;
+  } else if (code == 'protect') {
+    const validForm = getProtect.value.every(row => row.optionValue);
+    return validForm;
+  } else if (code == 'recover') {
+    const validForm = getRecover.value.every(row => row.optionValue);
+    return validForm;
+  }
+}
+
+const changePage = (numero: number, code?: string | null) => {
+  const responseValid = validArray(code);
+  if (responseValid) {
+    formularioActual.value = numero;
+  } else {
+    showRequestComplete.value = true;
+  }
 };
 
 const showModal = ref(false);
+const showRequestComplete = ref(false);
 
 
 const saveQuestions = () => {
-  showModal.value = true;
-  console.log('respuesta');
+  const validForm = getRespond.value.every(row => row.optionValue);
+  if (validForm) {
+    showModal.value = true;
+  } else {
+    showRequestComplete.value = true;
+  }
 }
 
 const save = async () => {
@@ -59,7 +89,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
         Cancelar
       </button>
     <button
-    @click="changePage(2)"
+    @click="changePage(2, 'identify')"
         class="bg-blue-500 ml-2 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none"
     >
     Siguiente
@@ -67,7 +97,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
     </div>
     </div>
     <div v-if="formularioActual === 2">
-      <div class="text-2xl font-bold mb-6">{{getDetected[0].functionQuestionsDescription }} </div>
+      <div class="text-2xl font-bold mb-6">{{getDetected[0] && getDetected[0].functionQuestionsDescription }} </div>
       <div v-for="(item, indexHeader) in getDetected" :key="indexHeader" class="mb-4">
         {{ indexHeader + 1 }}.  {{ item.nameQuestion }}
         <div>
@@ -91,7 +121,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
       Cancelar
     </button>
   <button
-  @click="changePage(3)"
+  @click="changePage(3, 'detected')"
       class="bg-blue-500 ml-2 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none"
   >
   Siguiente
@@ -123,7 +153,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
       Cancelar
     </button>
   <button
-  @click="changePage(4)"
+  @click="changePage(4, 'protect')"
       class="bg-blue-500 ml-2 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none"
   >
   Siguiente
@@ -155,7 +185,7 @@ const responses = ref(new Array(getIdentify.length).fill(null));
       Cancelar
     </button>
   <button
-  @click="changePage(5)"
+  @click="changePage(5, 'recover')"
       class="bg-blue-500 ml-2 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none"
   >
   Siguiente
@@ -201,5 +231,12 @@ const responses = ref(new Array(getIdentify.length).fill(null));
     @update:isOpen="showModal = $event"
     @confirm="save"
   />
+  <Modal
+  :isOpen="showRequestComplete"
+  title="Registrar preguntas"
+  message="Para continuar a la siguiente modulo debe completar todas preguntas"
+  @confirm="showRequestComplete = false"
+  :show-close="false"
+/>
   </div>
 </template>
