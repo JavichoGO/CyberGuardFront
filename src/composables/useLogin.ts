@@ -13,12 +13,16 @@ export function useUser() {
   const fullName = computed(() => userStore.fullName);
   const showSidebar = computed(() => userStore.showSidebar);
   const emailRecoveryComputed = computed(() => userStore.recoveryPassword);
+  const passwordModel = computed(() => userStore.password);
 
   // Expose store actions
   const fetchLogin = userStore.fetchLogin;
   const fetchResetPassword = userStore.fetchResetPassword;
+  const fetchUpdatePassword = userStore.fetchUpdatePassword;
 
   return {
+    fetchUpdatePassword,
+    passwordModel,
     emailRecoveryComputed,
     fetchResetPassword,
     showSidebar,

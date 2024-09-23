@@ -58,8 +58,6 @@ const save = async () => {
   await fetchSaveQuestion();
   router.push({ name: 'respuest', query: { isSolution: true } });
 }
-
-const responses = ref(new Array(getIdentify.length).fill(null));
 </script>
 
 <template>

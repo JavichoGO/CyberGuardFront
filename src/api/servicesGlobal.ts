@@ -12,7 +12,7 @@ export const getLogin = async (data: any) => {
     const response = await axios.post(`${API_URL}login`, body);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Error fetching users');
+    throw new Error('Error fetching users');
   }
 };
 

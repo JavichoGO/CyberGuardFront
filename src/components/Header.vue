@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 const router = useRouter();
 const show = ref(false);
-const fullName = ref<string>('');
+const fullName = ref<string | null>('');
 
 fullName.value = sessionStorage.getItem('full-name');
 

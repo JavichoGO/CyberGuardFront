@@ -4,12 +4,15 @@ import { useUser } from '@/composables/useLogin';
 // import  { useLogin } from '../stores/useLoginStore';
 import  { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
+const toast = useToast()
 const {  fetchResetPassword, emailRecoveryComputed } = useUser();
 
 const actionResetPassword = async () => {
   await fetchResetPassword();
+  toast.success('Se envio un correo para actualizar su contraseña.');
 }
 </script>
 
