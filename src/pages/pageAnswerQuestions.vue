@@ -33,7 +33,7 @@ const validArray = (code: string) => {
 }
 
 const changePage = (numero: number, code?: string | null | undefined) => {
-  const responseValid = validArray(code);
+  const responseValid = validArray(code || '');
   if (responseValid) {
     formularioActual.value = numero;
   } else {
@@ -56,7 +56,7 @@ const saveQuestions = () => {
 
 const save = async () => {
   await fetchSaveQuestion();
-  router.push({ name: 'respuest', query: { isSolution: true } });
+  router.push({ name: 'respuest', query: { isSolution: true.toString() } });
 }
 </script>
 

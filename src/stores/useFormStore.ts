@@ -3,10 +3,19 @@ import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia'
 import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de usar la ruta correcta
 
+interface Options {
+  optionValue: string;
+  nameOption: string;
+  id: string;
+  value: string;
+}
+
 interface MyItem {
+  categoryQuestionsDescription: string;
   functionQuestionsDescription: number;
   nameQuestion: string;
-  // optionsList: Array[];
+  optionValue: string;
+  optionsList: Options[];
   id: string;
 }
 
