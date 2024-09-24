@@ -66,7 +66,6 @@
   </script>
   
   <style scoped>
-  /* Add any additional styling here if needed */
   .top-label {
     top: -16px;
   }

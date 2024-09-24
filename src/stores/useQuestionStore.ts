@@ -49,7 +49,7 @@ actions: {
             idQuestion: userId,
             functionQuestions: Number(this.modelQuestion.functionQuestions),
             categoryQuestions: Number(this.modelQuestion.categoryQuestions),
-            options: this.modelQuestion.options.map((row) => {
+            options: this.modelQuestion.options.map((row: any) => {
                 return {
                     idOption: row.idOption,
                     optionName: row.optionName,
@@ -117,7 +117,7 @@ actions: {
         if (value.trim() === '') {
           this.questions = this.questionsOld;
         } else { 
-          this.questions = this.questions.filter(item =>
+          this.questions = this.questions.filter((item: any) =>
             item.nameQuestions.toLowerCase().includes(value) ||
             item.functionQuestions.toString().includes(value) ||
             item.categoryQuestions.toString().includes(value)
@@ -126,7 +126,7 @@ actions: {
       },
 
       setFunction(value: number) {
-        this.categories = this.categoriesOld.filter(p => p.parent == value);
+        this.categories = this.categoriesOld.filter((p: any) => p.parent == value);
       }
 }
 })

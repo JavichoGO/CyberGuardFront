@@ -3,15 +3,23 @@ import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia'
 import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de usar la ruta correcta
 
+interface MyItem {
+  functionQuestionsDescription: number;
+  nameQuestion: string;
+  // optionsList: Array[];
+  id: string;
+}
+
+
 export const useFormStore = defineStore('form', {
   state: () => ({
     forms: [],
     showFinish: null,
-    questionsIdentify: null,
-    questionDetect: null,
-    questionProtect: null,
-    questionRecover: null,
-    questionRespond: null,
+    questionsIdentify: [] as MyItem[],
+    questionDetect: [] as MyItem[],
+    questionProtect: [] as MyItem[],
+    questionRecover: [] as MyItem[],
+    questionRespond: [] as MyItem[],
   }),
   actions: {
    async getQuestionIdentification() {
@@ -28,7 +36,7 @@ export const useFormStore = defineStore('form', {
       this.questionRespond = response.data.data.questions.RESPOND;
     },
     async fetchSaveQuestion() {
-      const arrayQuestion = this.questionsIdentify.map((row: any) => {
+      const arrayQuestion = this.questionsIdentify && this.questionsIdentify.map((row: any) => {
         return {
           questionId: row.idQuestion,
           optionValue: row.optionValue,

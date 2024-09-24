@@ -7,7 +7,6 @@ import { useToast } from "vue-toastification";
 import appSelect from '@/utils/appSelect.vue';
 import appInput from '@/utils/appInput.vue';
 import Modal from '../utils/appModal.vue';
-import { getFunction, getCategory } from '@/utils/globalVariables';
 
 const toast = useToast()
 const showModal = ref(false);
@@ -70,11 +69,11 @@ const saveQuestion = async () => {
               <div class="flex justify-between">
                 <div class="mb-7 w-64">
                   <label class="block text-sm font-medium text-gray-700 mb-1">Función NIST</label>
-                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" v-model="modelQuestion.functionQuestions" @update:modelValue="setFunction($event)" />
+                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" @update:modelValue="setFunction($event)" />
                 </div>
                 <div class="mb-7 ml-3 w-64">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-                    <app-select :options="getCategories" :disabled="!modelQuestion.functionQuestions" :model-value="modelQuestion.categoryQuestions" v-model="modelQuestion.categoryQuestions" />
+                    <app-select :options="getCategories" :disabled="!modelQuestion.functionQuestions" :model-value="modelQuestion.categoryQuestions"/>
                   </div>
               </div>
               <div class="mb-7">

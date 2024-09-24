@@ -18,21 +18,21 @@ const formularioActual = ref(1);
 
 const validArray = (code: string) => {
   if (code == 'identify') {
-    const validForm = getIdentify.value.every(row => row.optionValue);
+    const validForm = getIdentify.value.every((row: any) => row.optionValue);
     return validForm;
   } else if (code == 'detected') {
-    const validForm = getDetected.value.every(row => row.optionValue);
+    const validForm = getDetected.value.every((row: any) => row.optionValue);
     return validForm;
   } else if (code == 'protect') {
-    const validForm = getProtect.value.every(row => row.optionValue);
+    const validForm = getProtect.value.every((row: any) => row.optionValue);
     return validForm;
   } else if (code == 'recover') {
-    const validForm = getRecover.value.every(row => row.optionValue);
+    const validForm = getRecover.value.every((row: any)  => row.optionValue);
     return validForm;
   }
 }
 
-const changePage = (numero: number, code?: string | null) => {
+const changePage = (numero: number, code?: string | null | undefined) => {
   const responseValid = validArray(code);
   if (responseValid) {
     formularioActual.value = numero;
@@ -46,7 +46,7 @@ const showRequestComplete = ref(false);
 
 
 const saveQuestions = () => {
-  const validForm = getRespond.value.every(row => row.optionValue);
+  const validForm = getRespond.value.every((row: any) => row.optionValue);
   if (validForm) {
     showModal.value = true;
   } else {
@@ -63,7 +63,7 @@ const save = async () => {
 <template>
   <div>
     <div v-if="formularioActual === 1">
-      <div class="text-2xl font-bold mb-6">{{getIdentify[0].functionQuestionsDescription }} </div>
+      <div class="text-2xl font-bold mb-6">{{getIdentify[0] && getIdentify[0].functionQuestionsDescription }} </div>
       <div v-for="(item, indexHeader) in getIdentify" :key="indexHeader" class="mb-4">
         {{ indexHeader + 1 }}.  {{ item.nameQuestion }}
         <div>
@@ -113,7 +113,7 @@ const save = async () => {
     </div>
     <div class="flex justify-end mt-5">
       <button
-      @click="changePage(1)"
+      @click="changePage(1, '')"
       class="py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
     >
       Cancelar
@@ -145,7 +145,7 @@ const save = async () => {
     </div>
     <div class="flex justify-end mt-5">
       <button
-      @click="changePage(2)"
+      @click="changePage(2, '')"
       class="py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
     >
       Cancelar
@@ -177,7 +177,7 @@ const save = async () => {
     </div>
     <div class="flex justify-end mt-5">
       <button
-      @click="changePage(3)"
+      @click="changePage(3, '')"
       class="py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
     >
       Cancelar

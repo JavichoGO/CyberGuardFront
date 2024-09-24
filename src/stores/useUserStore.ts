@@ -3,9 +3,16 @@ import { defineStore } from 'pinia'
 import axios from 'axios';
 import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de usar la ruta correcta
 
+interface MyItem {
+  number: number;
+  nameAll: string;
+  identification: string;
+  id: string;
+}
+
 export const storeUsers = defineStore('userStore', {
   state: () => ({
-    users: [],
+    users: [] as MyItem[],
     usersOrigin: [],
     modelUser: {
       nameAll: null,
@@ -44,8 +51,8 @@ export const storeUsers = defineStore('userStore', {
   
       async registerUser(userId: any) {
         const response =  userId ? await axiosInstance.put('user/update',this.modelUser) : await axiosInstance.post('user/create',this.modelUser);
-        this.status = response.status;
-        this.statusText = response.statusText;
+        // this.status = response.status;
+        // this.statusText = response.statusText;
         console.log(response);
       },
   
@@ -79,7 +86,7 @@ export const storeUsers = defineStore('userStore', {
         if (value.trim() === '') {
           this.users = this.usersOrigin;
         } else { 
-          this.users = this.users.filter(item =>
+          this.users = this.users.filter((item: any) =>
             item.nameAll.toLowerCase().includes(value) ||
             item.identification.toString().includes(value)
           );

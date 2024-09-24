@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/Login.vue'
 import gestorsUser from '@/pages/gestorsUsers.vue'
-import registerUser from '@/pages/registerUsers.vue'
+import registerUser from '../pages/pageRegisterUsers.vue'
 import registerQuestion from '@/pages/registerQuestions.vue'
 import MasterPage from '@/pages/MasterPage.vue'
 import metricsManagement from '@/pages/pageMetricsManagement.vue'
@@ -14,7 +14,7 @@ import resetPassword from '@/pages/restartPassword.vue';
 
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',

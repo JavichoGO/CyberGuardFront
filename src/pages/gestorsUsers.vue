@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import appInput from '../utils/appInput.vue';
+import appIinput from '../utils/appInput.vue';
 import { useUser } from '@/composables/useUsers';
 import { storeUsers } from '../stores/useUserStore';
 import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
@@ -16,7 +16,7 @@ const idUser = ref(null);
 const { getHttpUser, setUser, filteredUsers, actionDeleteUser } = storeUsers();
 const { users, fetchUsers } = useUser();
 
-const searchQuery = ref(null);
+const searchQuery = ref<string | null>('');
 
 
 onMounted(async () => {
@@ -48,7 +48,7 @@ const openDialog = (id: any) => {
 // }) 
 
 const searchUsers = () => {
-  const query = searchQuery.value.toLowerCase();
+  const query = searchQuery.value && searchQuery.value.toLowerCase();
   filteredUsers(query)
 }
 </script>
@@ -89,8 +89,8 @@ const searchUsers = () => {
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="item in users" :key="item.id" class="hover:bg-gray-100">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.number }}</td>
+            <tr v-for="(item, index) in users" :key="index" class="hover:bg-gray-100">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.number || 0 }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate">{{ item.nameAll }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.identification }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
