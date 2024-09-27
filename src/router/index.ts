@@ -64,7 +64,7 @@ const routes = [
         component: pageAnswerQuestions,
       },
       {
-        path: '/reset-password',
+        path: '/reset-password/:documentNumber?/:token',
         name: 'reset-password',
         component: resetPassword,
       },

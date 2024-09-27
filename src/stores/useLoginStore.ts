@@ -17,6 +17,8 @@ export const useLogin = defineStore('user', {
       emailRecovery: null,
     },
     password: {
+      token: '',
+      documentNumber: null,
       newPassword: null,
       repeatPassword: null,
     },
@@ -45,10 +47,9 @@ export const useLogin = defineStore('user', {
       const response2 = await axiosInstance.post('user/generateNewPasswordRecovery', { 
         password: this.password.newPassword,
         passwordTwo: this.password.repeatPassword,
-        identification: null,
-        token: 0,
+        identification: this.password.documentNumber,
+        token: Number(this.password.token),
       });
-      console.log(response2);
     }
   }
 });

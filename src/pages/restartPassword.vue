@@ -2,11 +2,16 @@
 import appInput from '@/utils/appInput.vue';
 import { useUser } from '@/composables/useLogin';
 import { useToast } from "vue-toastification";
+import { useRoute } from 'vue-router';
 
 const toast = useToast()
+const route = useRoute();
 const { passwordModel, fetchUpdatePassword } = useUser();
 
 const sucessAction = async () => {
+  debugger;
+  passwordModel.value.documentNumber = route.params.documentNumber;
+  passwordModel.value.token = route.params.token;
   await fetchUpdatePassword();
   toast.success('Se actualizó la contraseña correctamente.');
 }
