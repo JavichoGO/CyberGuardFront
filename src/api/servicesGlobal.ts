@@ -3,7 +3,6 @@ import axios from 'axios';
 const API_URL = 'https://cyberguard.up.railway.app/'; // Reemplaza con tu URL de API
 
 export const getLogin = async (data: any) => {
-    console.log(data);
   try {
     const body = {
       identification: data.documentNumber,
@@ -29,12 +28,6 @@ axiosInstance.interceptors.request.use(config => {
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-     // Modificar o agregar datos al payload de la solicitud
-    //  if (config.data) {
-    //   config.data = {
-    //     ...config.data,
-    //   };
-    // }
 
     return config;
   }, error => {

@@ -12,7 +12,6 @@ const toast = useToast()
 const router = useRouter();
 const showModal = ref(false);
 const idUser = ref(null);
-// const storeUser = storeUsers()
 const { getHttpUser, setUser, filteredUsers, actionDeleteUser } = storeUsers();
 const { users, fetchUsers } = useUser();
 
@@ -38,14 +37,6 @@ const openDialog = (id: any) => {
   showModal.value = true;
   idUser.value = id;
 }
-
-// const searchQuery = computed(() => {
-//   const query = this.searchQuery.toLowerCase();
-//       return this.tableData.filter(item =>
-//         item.name.toLowerCase().includes(query) ||
-//         item.age.toString().includes(query)
-//       );
-// }) 
 
 const searchUsers = () => {
   const query = searchQuery.value && searchQuery.value.toLowerCase();

@@ -16,16 +16,19 @@ export function useUser() {
   const fetchRegisterUser = userStore.registerUser;
   const fetchUpdateUser = userStore.actionUpdateUser;
   const fetchDeleteU = userStore.actionDeleteUser;
-
+  const fetchSearchMetric = userStore.actionSearchMetric;
+  const fetchSearchMetricUser = userStore.fetchSearchMetricUser;
   return {
     modelUser,
     users,
     response,
     messageStatus,
+    fetchSearchMetricUser,
     fetchUsers,
     fetchRegisterUser,
     fetchUpdateUser,
     fetchDeleteU,
+    fetchSearchMetric,
     usersOrigin,
   };
 }

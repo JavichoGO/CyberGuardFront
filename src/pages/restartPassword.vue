@@ -9,8 +9,7 @@ const route = useRoute();
 const { passwordModel, fetchUpdatePassword } = useUser();
 
 const sucessAction = async () => {
-  debugger;
-  passwordModel.value.documentNumber = route.params.documentNumber;
+  passwordModel.value.documentNumber = route.params && route.params.documentNumber;
   passwordModel.value.token = route.params.token;
   await fetchUpdatePassword();
   toast.success('Se actualizó la contraseña correctamente.');

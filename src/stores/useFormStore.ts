@@ -76,16 +76,13 @@ export const useFormStore = defineStore('form', {
         }
       });
       const responses = [...arrayQuestion, ...arrayDetected, ...arrayProtect, ...arrayRecover, ...arrayRespond];
-      console.log(responses);
       const response = await axiosInstance.post('question-user/save/answers', {
         responses,
       });
-      console.log(response);
     },
     async resetQuestion() {
       const identiicationUser = sessionStorage.getItem('identification');
       const response = await axiosInstance.get(`user/create/new/question/${identiicationUser}`);
-      console.log(response);
     }
   }
 });

@@ -8,14 +8,12 @@ import Modal from '../utils/appModal.vue';
 
 const { fetchQuestions, getShowFinished, fetchUpdate } = useForm();
 const store = useFormStore();
-// const { fetchQuestion } = storeToRefs(store);
 const router = useRouter();
 const route = useRoute();
 
 const showValidCompleted = ref(false);
 
 const validationPage = ref(route.query.isSolution)
-console.log(validationPage);
 
 
 const showModal = ref(false);

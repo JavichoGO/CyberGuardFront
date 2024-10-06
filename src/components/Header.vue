@@ -19,7 +19,7 @@ const loginOut = () => {
 </script>
 
 <template>
-  <nav class="fixed flex justify-end top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <nav class="no-print fixed flex justify-end top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
     <div class="px-3 py-2 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="relative">
@@ -76,7 +76,7 @@ const loginOut = () => {
     </div>
   </nav>
   
-  <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
+  <aside id="logo-sidebar" class="no-print fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
     <h5 class="text-white pl-4 mt-4 text-2xl font-bold border-b-2 border-gray-500">
       Menu
     </h5>
@@ -139,3 +139,12 @@ const loginOut = () => {
      </div>
   </aside>
 </template>
+
+<style>
+/* Asegúrate de que tus estilos de impresión estén aquí */
+@media print {
+  .no-print {
+    display: none;
+  }
+}
+</style>

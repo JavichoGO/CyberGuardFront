@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import appInput from '@/utils/appInput.vue';
 import { useUser } from '@/composables/useLogin';
-// import  { useLogin } from '../stores/useLoginStore';
 import  { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { useToast } from "vue-toastification";

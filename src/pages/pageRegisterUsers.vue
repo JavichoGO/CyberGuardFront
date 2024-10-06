@@ -9,7 +9,6 @@ const toast = useToast()
 const router = useRouter();
 const route = useRoute();
 const userId = route.params.id;
-console.log(userId)
 
 const showModal = ref(false);
 const textModal = ref('');

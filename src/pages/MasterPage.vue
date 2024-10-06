@@ -3,8 +3,6 @@ import Header from '@/components/Header.vue';
 import { ref } from 'vue';
 import { useLogin } from '@/stores/useLoginStore';
 import  { storeToRefs } from 'pinia';
-// import { RouterLink, RouterView } from 'vue-router'
-// import HelloWorld from './components/HelloWorld.vue'
 const tokenValue = ref<string | null>(null);
 tokenValue.value = sessionStorage.getItem('token-user');
 </script>

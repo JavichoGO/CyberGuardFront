@@ -2,6 +2,13 @@ import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia'
 import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de usar la ruta correcta
 
+export interface Password {
+  token: string | string[];
+  documentNumber: string | string[] | null; // Puede ser string o null
+  newPassword: string | null;     // Puede ser string o null
+  repeatPassword: string | null;  // Puede ser string o null
+}
+
 export const useLogin = defineStore('user', {
   state: () => ({
     modelLogin: {
@@ -21,7 +28,7 @@ export const useLogin = defineStore('user', {
       documentNumber: null,
       newPassword: null,
       repeatPassword: null,
-    },
+    } as Password,
   }),
   actions: {
    async fetchLogin() {
@@ -32,16 +39,12 @@ export const useLogin = defineStore('user', {
       sessionStorage.setItem('identification', response.username);
       this.identification = response.username;
       this.roleUser = response.roles;
-      // this.fullName = response.fullName;
-      // const response2 = await axiosInstance.get('user/list');
-      // this.users = response2.data;
     },
 
     async fetchResetPassword() {
       const response2 = await axiosInstance.post('user/recovery', { 
         email: this.recoveryPassword.emailRecovery,
       });
-      console.log(response2)
     },
     async fetchUpdatePassword() {
       const response2 = await axiosInstance.post('user/generateNewPasswordRecovery', { 

@@ -23,8 +23,8 @@ export const storeUsers = defineStore('userStore', {
       id: null,
       password: null,
     },
-    status: null,
-    statusText: null,
+    status: 0 as number,
+    statusText: '' as string,
     modelQuestion: {
     }
   }),
@@ -51,25 +51,38 @@ export const storeUsers = defineStore('userStore', {
   
       async registerUser(userId: any) {
         const response =  userId ? await axiosInstance.put('user/update',this.modelUser) : await axiosInstance.post('user/create',this.modelUser);
-        // this.status = response.status;
-        // this.statusText = response.statusText;
-        console.log(response);
+        this.status = response.status;
+        this.statusText = response.statusText;
       },
   
       async actionUpdateUser() {
         const response = await axiosInstance.put('user/update',this.modelUser);
-        // this.status = response.status;
-        // this.statusText = response.statusText;
-        console.log(response);
+        this.status = response.status;
+        this.statusText = response.statusText;
       },
   
       async actionDeleteUser(id: any) {
         const response = await axiosInstance.post('user/delete', {
           idPerson: id,
         });
-        // this.status = response.status;
-        // this.statusText = response.statusText;
-        console.log(response);
+        this.status = response.status;
+        this.statusText = response.statusText;
+      },
+
+      async actionSearchMetric() {
+        const response = await axiosInstance.get(`user/graphics/2`);
+        if (response.data) {
+          return response.data;
+        }
+        return [];
+      },
+
+      async fetchSearchMetricUser(documentNunber: number | null) {
+        const response = await axiosInstance.get(`user/graphics-identification/${documentNunber}`);
+        if (response.data) {
+          return response.data;
+        }
+        return [];
       },
   
       setUser(item: any) {
