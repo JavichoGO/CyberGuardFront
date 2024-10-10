@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import jsPDF from 'jspdf';
 import appSelect from '../utils/appSelect.vue';
 import { storeUsers } from '../stores/useUserStore';
 import { useUser } from '@/composables/useUsers';
@@ -96,10 +97,14 @@ const optionsMetrics = [
 
 const setMetric = async (value: any) => {
   modelMetric.value = value;
-  await fetchSearchMetric();
-  if (value == 2) {
+  if (value == 1) {
+    // Métricas generales
+    valueMetric.value = false;
+    await fetchSearchMetric();
+  } else if (value == 2) {
+    // Métricas por usuario
     await getHttpUser();
-    valueMetric.value = value == 2;
+    valueMetric.value = true;
   }
 }
 
@@ -108,7 +113,22 @@ const setUser = async (value: number) => {
 }
 
 const printMetric = () => {
-  window.print();
+  const doc = new jsPDF();
+  const canvas = document.getElementById('myRadar') as HTMLCanvasElement;
+  if (canvas) {
+    const imgData = canvas.toDataURL('image/png');
+    doc.addImage(imgData, 'PNG', 10, 10, 180, 160);
+    doc.save('metricas.pdf');
+  } else {
+    console.error('No se pudo encontrar el elemento del gráfico para imprimir.');
+  }
+}
+
+const generateContramedidasPDF = () => {
+  const link = document.createElement('a');
+  link.href = '/disenocontramedidas.pdf';
+  link.download = 'disenocontramedidas.pdf';
+  link.click();
 }
 
 const config: any = {
@@ -154,7 +174,7 @@ const config: any = {
         </div>
       </div>
       </div>
-    <div class="flex items-center">
+    <div class="flex items-center justify-center">
       <div class="flex w-1/2" v-if="showMetric">
         <canvas id="myRadar" class="radar-chart"></canvas>
       </div>
@@ -168,7 +188,11 @@ const config: any = {
       <button @click="printMetric" class="bg-blue-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
         Descargar
       </button>
+      <button @click="generateContramedidasPDF" class="bg-green-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 ml-4">
+        Generar contramedidas
+      </button>
     </div>
+    
   </div>
 </template>
 
