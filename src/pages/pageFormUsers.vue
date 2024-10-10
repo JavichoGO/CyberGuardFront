@@ -49,20 +49,24 @@ onMounted(async () => {
             <h2 class="text-2xl text-center">
                 MUCHAS GRACIAS POR REALIZAR LA ENCUESTA !
             </h2>
-            <div class="flex justify-end mt-5">
+            <div class="flex justify-center mt-5">
                 <button
                 @click="router.push({ name: 'metrics-management' });"
-                class="bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none"
+                class=" bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none"
             >
               VER MÉTRICAS
             </button>
             </div> 
         </div>
         <div v-else>
-            <h2 class="text-2xl text-center">
-                Este formulario está diseñado para determinar el grado de madurez de las Cajas Municipales de Ahorro y Crédito (CMAC) en el Perú a través de su punto de vista como integrante de la empresa auditora PWC.
-            </h2>
-            <div class="flex justify-end mt-5">
+            <h2 class="text-2xl text-center text-justify mx-auto" style="max-width: 800px;">
+        Este formulario está diseñado para determinar el grado de madurez de las Cajas Municipales de Ahorro y Crédito (CMAC) en el Perú a través de su punto de vista como integrante de la empresa auditora PWC.<br><br>
+        Por favor, tenga en cuenta que las preguntas están dirigidas únicamente a recoger su opinión personal y aseguramos la completa confidencialidad de sus respuestas. Los datos recopilados se utilizarán exclusivamente con fines académicos.
+    </h2>
+             <div class="flex justify-end mt-5">
+                
+
+
                 <button
                 @click="openDialog"
                 class="bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none"
