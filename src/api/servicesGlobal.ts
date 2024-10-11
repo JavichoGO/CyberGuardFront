@@ -8,10 +8,17 @@ export const getLogin = async (data: any) => {
       identification: data.documentNumber,
         password: data.password,
     };
-    const response = await axios.post(`${API_URL}login`, body);
+    try {
+      const response = await axios.post(`${API_URL}login`, body);
+      console.log(response);
     return response.data;
+    } catch (error) {
+      throw error;
+    }
   } catch (error) {
-    throw new Error('Error fetching users');
+    if (error.response.status == 401) {
+      return error.response.data;
+    }
   }
 };
 

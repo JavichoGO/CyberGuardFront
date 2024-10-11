@@ -2,18 +2,26 @@
 import appInput from '@/utils/appInput.vue';
 import { useUser } from '@/composables/useLogin';
 import  { storeToRefs } from 'pinia';
+import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
 import { onUnmounted } from 'vue';
 
+const toast = useToast()
 const router = useRouter();
 const { modelLogin, fetchLogin, roleUser } = useUser();
 
 const successUser = async () => {
-  await fetchLogin();
-  if (roleUser.value == 'ROLE_USER') {
+  const responseLogin = await fetchLogin();
+  console.log(responseLogin);
+  if (responseLogin.message) {
+    toast.error(responseLogin.message);
+
+  } else {
+    if (roleUser.value == 'ROLE_USER') {
     router.push({ name: 'respuest' });
   } else {
     router.push({ name: 'gestors-user' });
+  }
   }
 }
 

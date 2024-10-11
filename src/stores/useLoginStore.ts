@@ -39,6 +39,7 @@ export const useLogin = defineStore('user', {
       sessionStorage.setItem('identification', response.username);
       this.identification = response.username;
       this.roleUser = response.roles;
+      return response;
     },
 
     async fetchResetPassword() {
