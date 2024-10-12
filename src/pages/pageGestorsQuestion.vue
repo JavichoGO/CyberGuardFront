@@ -44,7 +44,7 @@
         <button class="text-blue-500 hover:text-blue-700" @click="editQuestion(item)">
           <PencilIcon class="h-6 w-6" />
         </button>
-        <button class="text-red-500 hover:text-red-700 ml-4" @click="openDialog(item.id)">
+        <button class="text-red-500 hover:text-red-700 ml-4" @click="openDialog(item.idQuestion)">
           <TrashIcon class="h-6 w-6" />
         </button>
       </td>

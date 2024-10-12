@@ -13,6 +13,8 @@ const userId = route.params.id;
 const showModal = ref(false);
 const textModal = ref('');
 const { modelUser, fetchRegisterUser, fetchUpdateUser, response, messageStatus } = useUser();
+const errorMessage = ref('');
+
 
 const saveUsers = async () => {
   await fetchRegisterUser(userId);
@@ -35,6 +37,9 @@ onUnmounted(() => {
 });
 
 const openModal = () => {
+  if (!modelUser.value.nameAll || !modelUser.value.identification || !modelUser.value.position || !modelUser.value.dateOfBirth || !modelUser.value.email || !modelUser.value.password) {
+    return toast.warning('Completar todos los campos para registrar un usuario.');
+  }
   showModal.value = true;
   textModal.value = userId ? 'Desea actualizar los datos del usuario ?' : '¿Desea registrar al nuevo usuario?';
 }
@@ -55,6 +60,7 @@ const openModal = () => {
                   label="Nombre completo"
                   placeholder="Ingrese nombre completo"
                 />
+                <p v-if="errorMessage" class="text-red-500 mt-1">{{ errorMessage }}</p>
               </div>
               <div class="mb-4">
                 <app-input

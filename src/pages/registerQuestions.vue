@@ -60,6 +60,14 @@ const saveQuestion = async () => {
   toast.success(`Se ${message} correctamente.`);
   router.push({ name: 'gestors-question' })
 }
+
+const openModal = () => {
+  const valid = modelQuestion.value.options.every(p => p.optionName !== null);
+  if (!modelQuestion.value.functionQuestions || !modelQuestion.value.categoryQuestions || !modelQuestion.value.nameQuestions || !valid) {
+    return toast.warning('Completar todos los campos para registrar un usuario.');
+  }
+  showModal.value = true;
+}
 </script>
 
 <template>
@@ -108,7 +116,7 @@ const saveQuestion = async () => {
               </button>
                 <button
                   type="button"
-                  @click="showModal = true"
+                  @click="openModal"
                   class="w-full ml-3 py-2 px-4 bg-blue-500  text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   {{ userId ? 'Actualizar' : 'Registrar' }}
