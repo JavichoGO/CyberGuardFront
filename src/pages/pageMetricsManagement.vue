@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-// import jsPDF from 'jspdf';
+import jsPDF from 'jspdf';
 import appSelect from '../utils/appSelect.vue';
 import { storeUsers } from '../stores/useUserStore';
 import { useUser } from '@/composables/useUsers';

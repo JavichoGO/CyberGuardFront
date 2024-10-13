@@ -64,7 +64,7 @@ const saveQuestion = async () => {
 const openModal = () => {
   const valid = modelQuestion.value.options.every(p => p.optionName !== null);
   if (!modelQuestion.value.functionQuestions || !modelQuestion.value.categoryQuestions || !modelQuestion.value.nameQuestions || !valid) {
-    return toast.warning('Completar todos los campos para registrar un usuario.');
+    return toast.warning('Completar todos los campos para registrar la pregunta.');
   }
   showModal.value = true;
 }
