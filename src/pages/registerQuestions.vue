@@ -15,11 +15,15 @@ const route = useRoute();
 const userId = route.params.id;
 const { modelQuestion, fetchRegisterQuestion, getFunctions, getCategories } = useQuestion();
 const { getCatalog, setFunction } = useQuestionStore();
+const disabledCategory = ref(true);
 
 onMounted(async () => {
   await getCatalog();
 })
-
+const setModelFunction = (value: number) => {
+  disabledCategory.value = false;
+  setFunction(value);
+}
 
 onUnmounted(() => {
   modelQuestion.value.nameQuestions = null;
@@ -77,11 +81,11 @@ const openModal = () => {
               <div class="flex justify-between">
                 <div class="mb-7 w-64">
                   <label class="block text-sm font-medium text-gray-700 mb-1">Función NIST</label>
-                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" @update:modelValue="setFunction($event)" />
+                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" @update:modelValue="setModelFunction($event)" />
                 </div>
                 <div class="mb-7 ml-3 w-64">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-                    <app-select :options="getCategories" :disabled="!modelQuestion.functionQuestions" :model-value="modelQuestion.categoryQuestions"/>
+                    <app-select :options="getCategories" :disabled="disabledCategory" :model-value="modelQuestion.categoryQuestions"/>
                   </div>
               </div>
               <div class="mb-7">
