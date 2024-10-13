@@ -15,7 +15,7 @@ export const getLogin = async (data: any) => {
     } catch (error) {
       throw error;
     }
-  } catch (error) {
+  } catch (error: any) {
     if (error.response.status == 401) {
       return error.response.data;
     }
