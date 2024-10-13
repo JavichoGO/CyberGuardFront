@@ -1,10 +1,11 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
 import { useUser } from '@/composables/useUsers';
-import appInput from '@/utils/appInput.vue';
 import Modal from '../utils/appModal.vue';
-import { ref, onUnmounted } from 'vue';
+import { ref, onUnmounted, computed } from 'vue';
 import { useToast } from "vue-toastification";
+import appInput from '@/utils/appInput.vue';
+
 const toast = useToast()
 const router = useRouter();
 const route = useRoute();
@@ -43,6 +44,35 @@ const openModal = () => {
   showModal.value = true;
   textModal.value = userId ? 'Desea actualizar los datos del usuario ?' : '¿Desea registrar al nuevo usuario?';
 }
+
+const computedMessage = computed(() => {
+      if (modelUser.value.nameAll && modelUser.value.nameAll.length > 50) {
+        return 'El nombre completo no debe ser mayor a 50 caracteres';
+      }
+      return '';
+    });
+
+    const computedMessageDni = computed(() => {
+      if (modelUser.value.identification && modelUser.value.identification.length > 20) {
+        return 'La identificación no debe ser mayor a 20 caracteres';
+      }
+      return '';
+    });
+
+    const computedMessagePosition = computed(() => {
+      if (modelUser.value.position && modelUser.value.position.length > 50) {
+        return 'La posición no debe ser mayor a 50 caracteres';
+      }
+      return '';
+    });
+
+    const computedMessagePassword = computed(() => {
+      if (modelUser.value.password && modelUser.value.password.length > 50) {
+        return 'La contraseña no debe ser mayor a 50 caracteres';
+      }
+      return '';
+    });
+
 </script>
 
 <template>
@@ -54,25 +84,24 @@ const openModal = () => {
                   v-model="modelUser.nameAll"
                   id="fullName"
                   required
-                  maxLength="50"
                   name="fullName"
                   type="text"
                   label="Nombre completo"
                   placeholder="Ingrese nombre completo"
                 />
-                <p v-if="errorMessage" class="text-red-500 mt-1">{{ errorMessage }}</p>
+                <p v-if="computedMessage" class="text-red-500 mt-1">{{ computedMessage }}</p>
               </div>
               <div class="mb-4">
                 <app-input
                   v-model="modelUser.identification"
                   id="document"
                   required
-                  maxLength="20"
                   name="document"
                   type="number"
                   label="Número de DNI (usuario)"
                   placeholder="Ingrese número de DNI"
                 />
+                <p v-if="computedMessageDni" class="text-red-500 mt-1">{{ computedMessageDni }}</p>
               </div>
               <div class="mb-2">
                 <app-input
@@ -82,9 +111,9 @@ const openModal = () => {
                   type="text"
                   label="Cargo"
                   required
-                  maxLength="50"
                   placeholder="Ingrese el cargo"
                 />
+                <p v-if="computedMessagePosition" class="text-red-500 mt-1">{{ computedMessagePosition }}</p>
                 </div>
                 <div class="mb-4">
                   
@@ -115,9 +144,9 @@ const openModal = () => {
                     type="text"
                     label="Contraseña"
                     required
-                    maxLength="50"
                     placeholder="Ingrese la contraseña"
                   />
+                  <p v-if="computedMessagePassword" class="text-red-500 mt-1">{{ computedMessagePassword }}</p>
                 </div>
                 <div class="flex items-center">
                   <button

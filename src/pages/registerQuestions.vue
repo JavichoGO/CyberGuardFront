@@ -2,7 +2,7 @@
 import { useRouter, useRoute } from 'vue-router';
 import  { useQuestion } from '../composables/useQuestion';
 import  { useQuestionStore } from '../stores/useQuestionStore';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useToast } from "vue-toastification";
 import appSelect from '@/utils/appSelect.vue';
 import appInput from '@/utils/appInput.vue';
@@ -72,6 +72,14 @@ const openModal = () => {
   }
   showModal.value = true;
 }
+
+const computedMessageQuestion = computed(() => {
+      if (modelQuestion.value.nameQuestions && modelQuestion.value.nameQuestions.length > 200) {
+        return 'La contraseña no debe ser mayor a 50 caracteres';
+      }
+      return '';
+    });
+
 </script>
 
 <template>
@@ -99,6 +107,7 @@ const openModal = () => {
                   required
                   placeholder="Ingrese la pregunta"
                 />
+                <p v-if="computedMessageQuestion" class="text-red-500 mt-1">{{ computedMessageQuestion }}</p>
               </div>
               <div class="mb-7" v-for="(item, index) in modelQuestion.options" :key="index">
                 <app-input
@@ -110,6 +119,7 @@ const openModal = () => {
                   maxLength="50"
 									id="name-password"
 								/>
+                <p class="text-red-500 mt-1">{{  item.optionName && item.optionName.length > 200 ? 'No debe ser mayor a 200 caracteres' : '' }}</p>
               </div>
                 <div class="flex items-center">
                   <button
