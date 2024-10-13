@@ -11,11 +11,17 @@ const router = useRouter();
 const { modelLogin, fetchLogin, roleUser } = useUser();
 
 const successUser = async () => {
+
+  if (!modelLogin.value.documentNumber || !modelLogin.value.password) {
+  toast.error('Por favor ingresa el DNI y la contraseña');
+  return;
+}
+
   const responseLogin = await fetchLogin();
   console.log(responseLogin);
   debugger;
-  if (false) {
-    toast.error(responseLogin.message);
+  if (responseLogin.status !== 'success') {
+    toast.error('Número de DNI y/o contraseña incorrecta');
   } else {
     if (roleUser.value == 'ROLE_USER') {
     router.push({ name: 'respuest' });
@@ -23,6 +29,7 @@ const successUser = async () => {
     router.push({ name: 'gestors-user' });
   }
   }
+  
 }
 
 onUnmounted(() => {
