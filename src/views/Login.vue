@@ -13,8 +13,7 @@ const { modelLogin, fetchLogin, roleUser } = useUser();
 const successUser = async () => {
   const responseLogin = await fetchLogin();
   console.log(responseLogin);
-  debugger;
-  if (false) {
+  if (responseLogin.message && responseLogin.error) {
     toast.error(responseLogin.message);
   } else {
     if (roleUser.value == 'ROLE_USER') {
