@@ -25,7 +25,7 @@ onMounted(async () => {
 const deleteUser = async () => {
   await actionDeleteUser(idUser.value);
   await getHttpUser();
-  toast.success('Se desactivo el usuario correctamente.');
+  toast.success('Se eliminó el usuario correctamente.');
 }
 
 const editUser = (item: any) => {
@@ -99,7 +99,7 @@ const searchUsers = () => {
         <Modal
         :isOpen="showModal"
         title="Confirmación"
-        message="Desea eliminar la pregunta"
+        message="Desea eliminar el usuario?"
         @update:isOpen="showModal = $event"
         @confirm="deleteUser"
       />

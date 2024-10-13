@@ -98,7 +98,7 @@ const editQuestion = (item) => {
 
 const deleteQuestion = async () => {
   await fetchDeleteQuestion(idQuestion.value);
-  toast.success(messageText.value);
+  toast.success('Se eliminó la pregunta correctamente.');
   await getQuestions();
 }
 
