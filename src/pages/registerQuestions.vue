@@ -75,7 +75,7 @@ const openModal = () => {
 
 const computedMessageQuestion = computed(() => {
       if (modelQuestion.value.nameQuestions && modelQuestion.value.nameQuestions.length > 200) {
-        return 'La contraseña no debe ser mayor a 50 caracteres';
+        return 'La contraseña no debe ser mayor a 200 caracteres';
       }
       return '';
     });
@@ -101,7 +101,6 @@ const computedMessageQuestion = computed(() => {
                   v-model="modelQuestion.nameQuestions"
                   id="question"
                   name="question"
-                  maxLength="50"
                   type="text"
                   label="Pregunta"
                   required
@@ -116,10 +115,9 @@ const computedMessageQuestion = computed(() => {
 									:label="item.label"
 									placeholder="Ingresar alternativa"
 									required
-                  maxLength="50"
 									id="name-password"
 								/>
-                <p class="text-red-500 mt-1">{{  item.optionName && item.optionName.length > 200 ? 'No debe ser mayor a 200 caracteres' : '' }}</p>
+                <p class="text-red-500 mt-1">{{  item.optionName && item.optionName.length > 100 ? 'No debe ser mayor a 100 caracteres' : '' }}</p>
               </div>
                 <div class="flex items-center">
                   <button
