@@ -46,14 +46,15 @@ const changePage = (numero: number, code?: string | null | undefined) => {
 
 const showModal = ref(false);
 const showRequestComplete = ref(false);
+const showRequestSaveComplete = ref(false);
 
 
 const saveQuestions = () => {
-  const validForm = getRespond.value.every((row: any) => row.optionValue);
+  const validForm = getRecover.value.every((row: any) => row.optionValue);
   if (validForm) {
     showModal.value = true;
   } else {
-    showRequestComplete.value = true;
+    showRequestSaveComplete.value = true;
   }
 }
 
@@ -107,7 +108,7 @@ const save = async () => {
       <div class="flex float-left mt-5"> 
         <button @click="changePage(2, 'protect')"
           class="py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-          Atras
+          Atrás
         </button>
       </div>
       <div class="flex justify-end mt-5">
@@ -133,7 +134,7 @@ const save = async () => {
       <div class="flex float-left mt-5"> 
         <button @click="changePage(1, 'identify')"
           class="py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-          Atras
+          Atrás
         </button>
       </div>
       <div class="flex justify-end mt-5">
@@ -159,7 +160,7 @@ const save = async () => {
       <div class="flex float-left mt-5"> 
         <button @click="changePage(4, 'respond')"
           class="py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-          Atras
+          Atrás
         </button>
       </div>
       <div class="flex justify-end mt-5">
@@ -172,7 +173,7 @@ const save = async () => {
     <div v-if="formularioActual === 4">
       <div class="text-2xl font-bold mb-6">{{ getRespond[0].functionQuestionsDescription }} </div>
       <div v-for="(item, indexHeader) in getRespond" :key="indexHeader" class="mb-4">
-        {{ indexHeader + 1 }}. {{ item.categoryQuestionsDescription }}
+        {{ indexHeader + 1 }}. {{ item.nameQuestion }}
         <div>
           <label v-for="option in item.optionsList" :key="option.value"
             class="flex items-center space-x-2 cursor-pointer">
@@ -185,7 +186,7 @@ const save = async () => {
       <div class="flex float-left mt-5"> 
         <button @click="changePage(3, 'detected')"
           class="py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-          Atras
+          Atrás
         </button>
       </div>
       <div class="flex justify-end mt-5">
@@ -195,10 +196,15 @@ const save = async () => {
         </button>
       </div>
     </div>
+    <Modal :isOpen="showRequestComplete" title="Registrar preguntas"
+      message="Para continuar a la siguiente función debe completar todas las preguntas"
+      @confirm="showRequestComplete = false" :show-close="false" />
+
     <Modal :isOpen="showModal" title="Registro cuestionario" message="Desea enviar el cuestionario ?"
       @update:isOpen="showModal = $event" @confirm="save" />
-    <Modal :isOpen="showRequestComplete" title="Registrar preguntas"
-      message="Para continuar a la siguiente modulo debe completar todas preguntas"
-      @confirm="showRequestComplete = false" :show-close="false" />
+      
+    <Modal :isOpen="showRequestSaveComplete" title="Validar Cuestionario"
+      message="Para enviar el formulario se debe completar todas las preguntas"
+      @confirm="showRequestSaveComplete = false" :show-close="false" />
   </div>
 </template>
