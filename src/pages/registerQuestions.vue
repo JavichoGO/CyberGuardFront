@@ -74,8 +74,9 @@ const openModal = () => {
 }
 
 const computedMessageQuestion = computed(() => {
-      if (modelQuestion.value.nameQuestions && modelQuestion.value.nameQuestions.length > 200) {
-        return 'La contraseña no debe ser mayor a 200 caracteres';
+      if (modelQuestion.value.nameQuestions && modelQuestion.value.nameQuestions.length > 200)
+       {
+        return 'La Pregunta no debe ser mayor a 200 caracteres';
       }
       return '';
     });
