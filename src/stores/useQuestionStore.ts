@@ -1,14 +1,21 @@
 import { defineStore } from 'pinia'
 import {  axiosInstance } from '@/api/servicesGlobal';
 
+interface MyItem {
+    optionValue: number | null;
+    label: string | null;
+    optionName: string | null;
+  }
+  
+
 export const useQuestionStore = defineStore('question', {
 state: () => ({
     questions: [],
     questionsOld: [],
     modelQuestion: {
-        nameQuestions: null,
-        functionQuestions: null,
-        categoryQuestions: null,
+        nameQuestions: '' as string | null,
+        functionQuestions: null as number | null,
+        categoryQuestions: '' as string | null,
         options: [
             {
                 label: 'Alternativa 1 (1 punto)',
@@ -35,7 +42,7 @@ state: () => ({
                 optionValue: 5,
                 optionName: null,
             },
-        ],
+        ] as MyItem[],
     },
     categories: [],
     categoriesOld: [],

@@ -21,6 +21,7 @@ onMounted(async () => {
   await getCatalog();
 })
 const setModelFunction = (value: number) => {
+  modelQuestion.value.functionQuestions = value;
   disabledCategory.value = false;
   setFunction(value);
 }
@@ -66,7 +67,9 @@ const saveQuestion = async () => {
 }
 
 const openModal = () => {
-  const valid = modelQuestion.value.options.every(p => p.optionName !== null);
+  debugger;
+
+  const valid = modelQuestion.value.options && modelQuestion.value.options.every(p => p.optionName != null && p.optionName.length > 0);
   if (!modelQuestion.value.functionQuestions || !modelQuestion.value.categoryQuestions || !modelQuestion.value.nameQuestions || !valid) {
     return toast.warning('Completar todos los campos para registrar la pregunta.');
   }
@@ -94,7 +97,7 @@ const computedMessageQuestion = computed(() => {
                 </div>
                 <div class="mb-7 ml-3 w-64">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-                    <app-select :options="getCategories" :disabled="disabledCategory" :model-value="modelQuestion.categoryQuestions"/>
+                    <app-select :options="getCategories" :disabled="disabledCategory" :model-value="modelQuestion.categoryQuestions" @update:modelValue="modelQuestion.categoryQuestions = $event"/>
                   </div>
               </div>
               <div class="mb-7">

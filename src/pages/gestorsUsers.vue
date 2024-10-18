@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import appIinput from '../utils/appInput.vue';
+import appInput from '../utils/appInput.vue';
 import { useUser } from '@/composables/useUsers';
 import { storeUsers } from '../stores/useUserStore';
 import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
