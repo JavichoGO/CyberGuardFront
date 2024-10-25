@@ -10,8 +10,8 @@ interface MyItem {
 
 export const useQuestionStore = defineStore('question', {
 state: () => ({
-    questions: [],
-    questionsOld: [],
+    questions: [] as any[],
+    questionsOld: [] as any[],
     modelQuestion: {
         nameQuestions: '' as string | null,
         functionQuestions: null as number | null,
@@ -120,17 +120,19 @@ actions: {
         this.statusText = response.data.message;
       },
 
-      filteredQuestion(value: any) {
+      filteredQuestion(value: string) {
         if (value.trim() === '') {
-          this.questions = this.questionsOld;
-        } else { 
-          this.questions = this.questions.filter((item: any) =>
-            item.nameQuestions.toLowerCase().includes(value) ||
-            item.functionQuestions.toString().includes(value) ||
-            item.categoryQuestions.toString().includes(value)
+          this.questions = this.questionsOld; // Restaurar la lista completa si no hay búsqueda
+        } else {
+          const query = value.toLowerCase().trim();
+          this.questions = this.questionsOld.filter((item: any) =>
+            item.nameQuestions.toLowerCase().includes(query) ||
+            (item.functionQuestionsDescription && item.functionQuestionsDescription.toLowerCase().includes(query)) ||
+            (item.categoryQuestionsDescription && item.categoryQuestionsDescription.toLowerCase().includes(query))
           );
         }
       },
+
 
       setFunction(value: number) {
         this.categories = this.categoriesOld.filter((p: any) => p.parent == value);

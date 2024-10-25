@@ -4,7 +4,7 @@ import { useUser } from '@/composables/useUsers';
 import { storeUsers } from '../stores/useUserStore';
 import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { useRouter } from 'vue-router';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import Modal from '@/utils/appModal.vue';
 import { useToast } from "vue-toastification";
 
@@ -17,16 +17,25 @@ const { users, fetchUsers } = useUser();
 
 const searchQuery = ref<string | null>('');
 
+const user = computed(() => useUser().users);
 
 onMounted(async () => {
   await getHttpUser();
 })
+
+watch(searchQuery, (newValue) => {
+  filteredUsers(newValue || '');
+});
 
 const deleteUser = async () => {
   await actionDeleteUser(idUser.value);
   await getHttpUser();
   toast.success('Se eliminó el usuario correctamente.');
 }
+
+watch(searchQuery, (newValue) => {
+  filteredUsers(newValue);
+});
 
 const editUser = (item: any) => {
   setUser(item);
@@ -57,17 +66,11 @@ const searchUsers = () => {
                 <app-input
                 v-model="searchQuery"
                 type="text"
-                label="Ingrese valor"
+                label="Ingrese Nombre o DNI"
                 required
                 id="name-input"
                 maxLength="50"
-                @keyup.enter="searchUsers"
               />
-            </div>
-            <div class="w-1/4 ml-5">
-                <button @click="searchUsers" class="bg-blue-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                    Buscar
-                  </button>
             </div>
           </div>
         <div class="mt-8 mx-9">
@@ -76,7 +79,7 @@ const searchUsers = () => {
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro.</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre completo</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro. DNI</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro. Doc. Id.</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
