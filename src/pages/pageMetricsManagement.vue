@@ -6,6 +6,7 @@ import { storeUsers } from '../stores/useUserStore';
 import { useUser } from '@/composables/useUsers';
 import { Chart, registerables } from 'chart.js';
 
+
 Chart.register(...registerables);
 
 const printArea = ref(null);
@@ -47,44 +48,75 @@ const dataMetrics = ref<any>([]);
       ],
     });
 
+    Chart.register(...registerables);
+
+    let myChart: Chart | null = null; // Definir myChart como Chart o null
+
+const createChart = () => {
+  const chartElement = document.getElementById('myRadar') as HTMLCanvasElement;
+
+  if (myChart) {
+    myChart.destroy(); // Destruir el gráfico previo si existe
+  }
+
+  if (chartElement) {
+    myChart = new Chart(chartElement, config);
+  }
+};
 
 onMounted(async () => {
- const response = await fetchSearchMetric();
- dataMetrics.value = response.data;
- if (response && response.data.function.length > 0) {
-  dataMetrics.value = response.data.function;
-  chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
-  chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
-  chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
-  const chartElement = document.getElementById('myRadar') as HTMLCanvasElement;
-    if (chartElement) {
-    const myChart = new Chart(chartElement, config);
-    }
- }
-})
+  const response = await fetchSearchMetric();
+  dataMetrics.value = response.data;
 
-const valueMetric = ref<boolean | null>(false);
-const modelMetric = ref<number | null>(1);
-
-const searchMetrics = async () => {
-  const response = await fetchSearchMetricUser(documentNumberUser.value);
-  if (response && response.data && response.data.function && response.data.function.length > 0) {
+  if (response && response.data.function.length > 0) {
     dataMetrics.value = response.data.function;
     chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
     chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
     chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
 
-    const chartElement = document.getElementById('myRadar') as HTMLCanvasElement;
-    if (chartElement) {
-    const myChart = new Chart(chartElement, config);
-    }
+    createChart(); // Crear el gráfico
+  }
+});
+
+
+const valueMetric = ref<boolean | null>(false);
+const modelMetric = ref<number | null>(1);
+
+const searchMetrics = async () => {
+  // Limpiar los datos anteriores
+  chartData.value.labels = [];
+  chartData.value.datasets[0].data = [];
+  chartData.value.datasets[1].data = [];
+  
+  // Destruir el gráfico previo si existe
+  if (myChart) {
+    myChart.destroy();
+    myChart = null;
+  }
+
+  // Realizar la búsqueda de métricas del usuario
+  const response = await fetchSearchMetricUser(documentNumberUser.value);
+  if (response && response.data && response.data.function && response.data.function.length > 0) {
+    // Actualizar los datos del gráfico con los nuevos datos del usuario
+    dataMetrics.value = response.data.function;
+    chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
+    chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
+    chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
+
+    showMetric.value = true; // Mostrar el gráfico
+    createChart(); // Crear el gráfico con los nuevos datos
   } else {
+    // Mostrar el mensaje de que no hay datos y ocultar el gráfico
     showMetric.value = false;
-        textNothing.value = response.message === "Sin datos para mostrar" 
+    textNothing.value = response.message === "Sin datos para mostrar" 
       ? "El encuestado seleccionado aún no ha enviado el cuestionario" 
       : response.message;
+
+    // Destruir el gráfico si no hay datos
   }
-  };
+};
+
+
 
 const optionsMetrics = [
   {
@@ -101,16 +133,36 @@ const setMetric = async (value: any) => {
   showMetric.value = true;
   textNothing.value = null;
   modelMetric.value = value;
+
+  // Limpiar los datos previos del gráfico
+  chartData.value.labels = [];
+  chartData.value.datasets[0].data = [];
+  chartData.value.datasets[1].data = [];
+
+  if (myChart) {
+    myChart.destroy(); // Destruir el gráfico previo si existe
+    myChart = null;
+  }
+
   if (value == 1) {
     // Métricas generales
     valueMetric.value = false;
-    await fetchSearchMetric();
+    const response = await fetchSearchMetric();
+    if (response && response.data.function.length > 0) {
+      dataMetrics.value = response.data.function;
+      chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
+      chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
+      chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
+      
+      createChart(); // Crear el gráfico con las métricas generales
+    }
   } else if (value == 2) {
     // Métricas por usuario
     await getHttpUser();
     valueMetric.value = true;
   }
-}
+};
+
 
 const setUser = async (value: number) => {
   documentNumberUser.value = value;
@@ -152,7 +204,7 @@ const config: any = {
     plugins: {
       title: {
         display: true,
-        text: 'Metricas'
+        text: 'Métricas'
       }
     }
   },
