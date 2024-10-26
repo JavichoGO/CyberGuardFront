@@ -25,10 +25,11 @@ export const useFormStore = defineStore('form', {
     forms: [],
     showFinish: null,
     questionsIdentify: [] as MyItem[],
-    questionDetect: [] as MyItem[],
     questionProtect: [] as MyItem[],
-    questionRecover: [] as MyItem[],
+    questionDetect: [] as MyItem[],
     questionRespond: [] as MyItem[],
+    questionRecover: [] as MyItem[],
+
   }),
   actions: {
    async getQuestionIdentification() {
@@ -39,19 +40,13 @@ export const useFormStore = defineStore('form', {
       this.showFinish = response.data.data.finish;
       this.forms = response.data.data.questions;
       this.questionsIdentify = response.data.data.questions.IDENTIFY;
-      this.questionDetect = response.data.data.questions.DETECT;
       this.questionProtect = response.data.data.questions.PROTECT;
-      this.questionRecover = response.data.data.questions.RECOVER;
+      this.questionDetect = response.data.data.questions.DETECT;
       this.questionRespond = response.data.data.questions.RESPOND;
+      this.questionRecover = response.data.data.questions.RECOVER;
     },
     async fetchSaveQuestion() {
       const arrayQuestion = this.questionsIdentify && this.questionsIdentify.map((row: any) => {
-        return {
-          questionId: row.idQuestion,
-          optionValue: row.optionValue,
-        }
-      });
-      const arrayDetected = this.questionDetect.map((row: any) => {
         return {
           questionId: row.idQuestion,
           optionValue: row.optionValue,
@@ -63,7 +58,7 @@ export const useFormStore = defineStore('form', {
           optionValue: row.optionValue,
         }
       });
-      const arrayRecover = this.questionRecover.map((row: any) => {
+      const arrayDetected = this.questionDetect.map((row: any) => {
         return {
           questionId: row.idQuestion,
           optionValue: row.optionValue,
@@ -75,7 +70,14 @@ export const useFormStore = defineStore('form', {
           optionValue: row.optionValue,
         }
       });
-      const responses = [...arrayQuestion, ...arrayDetected, ...arrayProtect, ...arrayRecover, ...arrayRespond];
+      const arrayRecover = this.questionRecover.map((row: any) => {
+        return {
+          questionId: row.idQuestion,
+          optionValue: row.optionValue,
+        }
+
+      });
+      const responses = [...arrayQuestion, ...arrayProtect, ...arrayDetected, ...arrayRespond, ...arrayRecover];
       const response = await axiosInstance.post('question-user/save/answers', {
         responses,
       });

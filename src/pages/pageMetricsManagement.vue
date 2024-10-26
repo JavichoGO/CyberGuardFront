@@ -80,9 +80,11 @@ const searchMetrics = async () => {
     }
   } else {
     showMetric.value = false;
-    textNothing.value = response.message;
+        textNothing.value = response.message === "Sin datos para mostrar" 
+      ? "El encuestado seleccionado aún no ha enviado el cuestionario" 
+      : response.message;
   }
-}
+  };
 
 const optionsMetrics = [
   {
@@ -96,6 +98,8 @@ const optionsMetrics = [
 ]
 
 const setMetric = async (value: any) => {
+  showMetric.value = true;
+  textNothing.value = null;
   modelMetric.value = value;
   if (value == 1) {
     // Métricas generales
