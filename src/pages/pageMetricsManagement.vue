@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import jsPDF from 'jspdf';
+import { onMounted, ref , watch } from 'vue';
+// import jsPDF from 'jspdf';
 import appSelect from '../utils/appSelect.vue';
 import { storeUsers } from '../stores/useUserStore';
 import { useUser } from '@/composables/useUsers';
@@ -10,7 +10,9 @@ import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 const printArea = ref(null);
+const roleCode = ref<string | null>('');
 
+roleCode.value = sessionStorage.getItem('user-role');
 const { getHttpUser } = storeUsers();
 const { users, fetchSearchMetric, fetchSearchMetricUser } = useUser();
 const showMetric = ref<boolean | null>(true);
@@ -96,6 +98,7 @@ const searchMetrics = async () => {
 
   // Realizar la búsqueda de métricas del usuario
   const response = await fetchSearchMetricUser(documentNumberUser.value);
+  
   if (response && response.data && response.data.function && response.data.function.length > 0) {
     // Actualizar los datos del gráfico con los nuevos datos del usuario
     dataMetrics.value = response.data.function;
@@ -143,7 +146,6 @@ const setMetric = async (value: any) => {
     myChart.destroy(); // Destruir el gráfico previo si existe
     myChart = null;
   }
-
   if (value == 1) {
     // Métricas generales
     valueMetric.value = false;
@@ -159,6 +161,7 @@ const setMetric = async (value: any) => {
   } else if (value == 2) {
     // Métricas por usuario
     await getHttpUser();
+    showMetric.value = false;
     valueMetric.value = true;
   }
 };
@@ -215,7 +218,7 @@ const config: any = {
   <div class="mt-10" id="content-to-print">
     <h1 class="text-4xl font-bold text-gray-900 text-center mb-7">Gestión de métricas</h1>
     <div class="mb-4 flex px-9 flex-col">
-      <div class="w-1/2">
+      <div class="w-1/2" v-if="roleCode !== 'ROLE_USER'">
         <appSelect :options="optionsMetrics" :model-value="modelMetric" @update:modelValue="setMetric($event)" />
       </div>
       <div class="flex mt-4" v-if="valueMetric">

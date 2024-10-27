@@ -20,6 +20,9 @@ const textModal = ref('');
 
 onMounted(async () => {
   await getCatalog();
+  if (userId) {
+    disabledCategory.value = false;
+  }
 })
 const setModelFunction = (value: number) => {
   modelQuestion.value.functionQuestions = value;
