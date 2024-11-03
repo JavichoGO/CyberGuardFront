@@ -23,6 +23,7 @@ const textNothing = ref<string | null>(null);
 interface Function {
   average: number;
   categoryDescription: string;
+  functionDescription:string;
   desired: number;
   idFunction: number;
 }
@@ -66,17 +67,59 @@ const createChart = () => {
   }
 };
 
+// Función para actualizar el gráfico con los datos adecuados
+const updateChartData = (data: any, useCategoryDescription: boolean) => {
+  chartData.value.labels = data.map((item: Function) => 
+    useCategoryDescription ? item.categoryDescription || 'N/A' : item.functionDescription || 'N/A'
+  );
+  chartData.value.datasets[0].data = data.map((item: Function) => item.average);
+  chartData.value.datasets[1].data = data.map((item: Function) => item.desired || 0);
+  createChart(); // Crear o actualizar el gráfico
+};
+
 onMounted(async () => {
-  const response = await fetchSearchMetric();
-  dataMetrics.value = response.data;
-
-  if (response && response.data.function.length > 0) {
-    dataMetrics.value = response.data.function;
-    chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
-    chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
-    chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
-
-    createChart(); // Crear el gráfico
+  if (roleCode.value === 'ROLE_ADMIN') {
+    if (modelMetric.value === 1) {
+      // Servicio de métricas generales
+      const response = await fetchSearchMetric();
+      if (response && response.data.function.length > 0) {
+        dataMetrics.value = response.data.function.map((item: any, index: number) => {
+          item.desired = index < 2 ? 4 : index < 4 ? 3 : 4; // Asigna `desired` basado en el índice
+          return item;
+        });
+        updateChartData(dataMetrics.value, true); // Usa categoryDescription para el gráfico
+      }
+    } else if (modelMetric.value === 2) {
+      // Servicio de métricas por usuario
+      const response = await fetchSearchMetricUser(documentNumberUser.value);
+      if (response && response.data.function.length > 0) {
+        dataMetrics.value = response.data.function.map((item: any, index: number) => {
+          item.desired = index < 2 ? 4 : index < 4 ? 3 : 4;
+          return item;
+        });
+        updateChartData(dataMetrics.value, false); // Usa functionDescription para el gráfico
+      }
+    }
+  } else if (roleCode.value === 'ROLE_USER') {
+    documentNumberUser.value = parseInt(sessionStorage.getItem('identification') || '0');
+    if (documentNumberUser.value) {
+      const response = await fetchSearchMetricUser(documentNumberUser.value);
+      if (response && response.data.function.length > 0) {
+        dataMetrics.value = response.data.function.map((item: any, index: number) => {
+          item.desired = index < 2 ? 4 : index < 4 ? 3 : 4;
+          return item;
+        });
+        updateChartData(dataMetrics.value, false); // Usa functionDescription para el gráfico
+      } else {
+        showMetric.value = false;
+        textNothing.value = response.message === "Sin datos para mostrar"
+          ? "El encuestado seleccionado aún no ha enviado el cuestionario"
+          : response.message;
+      }
+    } else {
+      showMetric.value = false;
+      textNothing.value = "No se pudo obtener el código de usuario para mostrar los datos.";
+    }
   }
 });
 
@@ -85,37 +128,23 @@ const valueMetric = ref<boolean | null>(false);
 const modelMetric = ref<number | null>(1);
 
 const searchMetrics = async () => {
-  // Limpiar los datos anteriores
   chartData.value.labels = [];
   chartData.value.datasets[0].data = [];
   chartData.value.datasets[1].data = [];
-  
-  // Destruir el gráfico previo si existe
   if (myChart) {
     myChart.destroy();
     myChart = null;
   }
 
-  // Realizar la búsqueda de métricas del usuario
   const response = await fetchSearchMetricUser(documentNumberUser.value);
-  
-  if (response && response.data && response.data.function && response.data.function.length > 0) {
-    // Actualizar los datos del gráfico con los nuevos datos del usuario
+  if (response && response.data && response.data.function.length > 0) {
     dataMetrics.value = response.data.function;
-    chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
-    chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
-    chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
-
-    showMetric.value = true; // Mostrar el gráfico
-    createChart(); // Crear el gráfico con los nuevos datos
+    const useCategoryDescription = roleCode.value === 'ROLE_ADMIN' && modelMetric.value === 1;
+    updateChartData(dataMetrics.value, useCategoryDescription);
+    showMetric.value = true;
   } else {
-    // Mostrar el mensaje de que no hay datos y ocultar el gráfico
     showMetric.value = false;
-    textNothing.value = response.message === "Sin datos para mostrar" 
-      ? "El encuestado seleccionado aún no ha enviado el cuestionario" 
-      : response.message;
-
-    // Destruir el gráfico si no hay datos
+    textNothing.value = response.message || "Sin datos para mostrar";
   }
 };
 
@@ -137,35 +166,27 @@ const setMetric = async (value: any) => {
   textNothing.value = null;
   modelMetric.value = value;
 
-  // Limpiar los datos previos del gráfico
   chartData.value.labels = [];
   chartData.value.datasets[0].data = [];
   chartData.value.datasets[1].data = [];
 
   if (myChart) {
-    myChart.destroy(); // Destruir el gráfico previo si existe
+    myChart.destroy();
     myChart = null;
   }
+  
   if (value == 1) {
-    // Métricas generales
-    valueMetric.value = false;
     const response = await fetchSearchMetric();
     if (response && response.data.function.length > 0) {
       dataMetrics.value = response.data.function;
-      chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
-      chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
-      chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
-      
-      createChart(); // Crear el gráfico con las métricas generales
+      updateChartData(dataMetrics.value, true); // Métricas generales con categoryDescription
     }
   } else if (value == 2) {
-    // Métricas por usuario
     await getHttpUser();
     showMetric.value = false;
     valueMetric.value = true;
   }
 };
-
 
 const setUser = async (value: number) => {
   documentNumberUser.value = value;
