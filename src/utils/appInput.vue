@@ -9,6 +9,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :class="inputClasses"
+        :maxLength="maxLength"
         @input="$emit('update:modelValue', $event.target.value)"
         @focus="onFocus"
         @blur="onBlur"
@@ -30,6 +31,7 @@
       type: String,
       default: 'text'
     },
+    maxLength: Number,
     id: String,
     name: String,
     placeholder: String,
@@ -64,7 +66,6 @@
   </script>
   
   <style scoped>
-  /* Add any additional styling here if needed */
   .top-label {
     top: -16px;
   }

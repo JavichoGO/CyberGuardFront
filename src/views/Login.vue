@@ -1,23 +1,34 @@
 <script setup lang="ts">
 import appInput from '@/utils/appInput.vue';
 import { useUser } from '@/composables/useLogin';
-// import  { useLogin } from '../stores/useLoginStore';
 import  { storeToRefs } from 'pinia';
+import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
 import { onUnmounted } from 'vue';
 
+const toast = useToast()
 const router = useRouter();
-const { modelLogin, fetchLogin, roleUser, showSidebar } = useUser();
+const { modelLogin, fetchLogin, roleUser } = useUser();
 
 const successUser = async () => {
-  await fetchLogin();
-  debugger;
-  if (roleUser.value == 'ROLE_USER') {
+
+  if (!modelLogin.value.documentNumber || !modelLogin.value.password) {
+  toast.error('Por favor ingresa el DNI y la contraseña');
+  return;
+}
+
+  const responseLogin = await fetchLogin();
+  console.log(responseLogin);
+  if (responseLogin.message && responseLogin.error) {
+    toast.error('Número de DNI y/o contraseña incorrecta');
+  } else {
+    if (roleUser.value == 'ROLE_USER') {
     router.push({ name: 'respuest' });
   } else {
     router.push({ name: 'gestors-user' });
   }
-  showSidebar.value = true;
+  }
+  
 }
 
 onUnmounted(() => {
@@ -27,7 +38,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main class="flex items-center justify-center h-screen">
+  <main class="flex items-center justify-center h-screen bg-gray-100">
     <div class="w-full max-w-lg  bg-white p-8 rounded-lg shadow-md">
         <h2 class="text-2xl font-bold mb-6 text-gray-700">Iniciar sesión para continuar</h2>
             <div class="mb-4">

@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import appInput from '@/utils/appInput.vue';
 import { useUser } from '@/composables/useLogin';
-// import  { useLogin } from '../stores/useLoginStore';
 import  { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
-const { modelLogin, fetchLogin } = useUser();
+const toast = useToast()
+const {  fetchResetPassword, emailRecoveryComputed } = useUser();
 
 const actionResetPassword = async () => {
-//   await fetchLogin();
-//   router.push({ name: 'gestors-user' });
+  await fetchResetPassword();
+  toast.success('Se envio un correo para actualizar su contraseña.');
 }
 </script>
 
@@ -20,9 +21,9 @@ const actionResetPassword = async () => {
         <h2 class="text-2xl font-bold mb-6 text-gray-700">Olvidé mi contraseña</h2>
             <div class="mb-4">
               <app-input
-              v-model="modelLogin.documentNumber"
-              id="document"
-              name="document"
+              v-model="emailRecoveryComputed.emailRecovery"
+              id="emailRecovery"
+              name="emailRecovery"
               type="email"
               required
               label="Ingresar email"

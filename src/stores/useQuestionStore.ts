@@ -1,14 +1,21 @@
 import { defineStore } from 'pinia'
 import {  axiosInstance } from '@/api/servicesGlobal';
 
+interface MyItem {
+    optionValue: number | null;
+    label: string | null;
+    optionName: string | null;
+  }
+  
+
 export const useQuestionStore = defineStore('question', {
 state: () => ({
-    questions: [],
-    questionsOld: [],
+    questions: [] as any[],
+    questionsOld: [] as any[],
     modelQuestion: {
-        nameQuestions: null,
-        functionQuestions: null,
-        categoryQuestions: null,
+        nameQuestions: '' as string | null,
+        functionQuestions: null as number | null,
+        categoryQuestions: '' as string | null,
         options: [
             {
                 label: 'Alternativa 1 (1 punto)',
@@ -35,7 +42,7 @@ state: () => ({
                 optionValue: 5,
                 optionName: null,
             },
-        ],
+        ] as MyItem[],
     },
     categories: [],
     categoriesOld: [],
@@ -49,7 +56,7 @@ actions: {
             idQuestion: userId,
             functionQuestions: Number(this.modelQuestion.functionQuestions),
             categoryQuestions: Number(this.modelQuestion.categoryQuestions),
-            options: this.modelQuestion.options.map((row) => {
+            options: this.modelQuestion.options.map((row: any) => {
                 return {
                     idOption: row.idOption,
                     optionName: row.optionName,
@@ -69,7 +76,6 @@ actions: {
             })
         }
         );
-        console.log(response);
     },
 
     setQuestion(row: any) {
@@ -114,22 +120,22 @@ actions: {
         this.statusText = response.data.message;
       },
 
-      filteredQuestion(value: any) {
+      filteredQuestion(value: string) {
         if (value.trim() === '') {
-          this.questions = this.questionsOld;
-        } else { 
-          this.questions = this.questions.filter(item =>
-            item.nameQuestions.toLowerCase().includes(value) ||
-            item.functionQuestions.toString().includes(value) ||
-            item.categoryQuestions.toString().includes(value)
+          this.questions = this.questionsOld; // Restaurar la lista completa si no hay búsqueda
+        } else {
+          const query = value.toLowerCase().trim();
+          this.questions = this.questionsOld.filter((item: any) =>
+            item.nameQuestions.toLowerCase().includes(query) ||
+            (item.functionQuestionsDescription && item.functionQuestionsDescription.toLowerCase().includes(query)) ||
+            (item.categoryQuestionsDescription && item.categoryQuestionsDescription.toLowerCase().includes(query))
           );
         }
       },
 
+
       setFunction(value: number) {
-        debugger;
-        this.categories = this.categoriesOld.filter(p => p.parent == value);
-        console.log(value);
+        this.categories = this.categoriesOld.filter((p: any) => p.parent == value);
       }
 }
 })

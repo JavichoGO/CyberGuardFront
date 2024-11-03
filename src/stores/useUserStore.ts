@@ -3,9 +3,16 @@ import { defineStore } from 'pinia'
 import axios from 'axios';
 import { getLogin, axiosInstance } from '@/api/servicesGlobal'; // Asegúrate de usar la ruta correcta
 
+interface MyItem {
+  number: number;
+  nameAll: string;
+  identification: string;
+  id: string;
+}
+
 export const storeUsers = defineStore('userStore', {
   state: () => ({
-    users: [],
+    users: [] as MyItem[],
     usersOrigin: [],
     modelUser: {
       nameAll: null,
@@ -16,14 +23,13 @@ export const storeUsers = defineStore('userStore', {
       id: null,
       password: null,
     },
-    status: null,
-    statusText: null,
+    status: 0 as number,
+    statusText: '' as string,
     modelQuestion: {
     }
   }),
   actions: {
     async getHttpUser() {
-      debugger;
       try {
         const response2 = await axiosInstance.get('user/list');
         this.usersOrigin = response2?.data.map((row: any, index: number) => {
@@ -47,23 +53,36 @@ export const storeUsers = defineStore('userStore', {
         const response =  userId ? await axiosInstance.put('user/update',this.modelUser) : await axiosInstance.post('user/create',this.modelUser);
         this.status = response.status;
         this.statusText = response.statusText;
-        console.log(response);
       },
   
       async actionUpdateUser() {
         const response = await axiosInstance.put('user/update',this.modelUser);
-        // this.status = response.status;
-        // this.statusText = response.statusText;
-        console.log(response);
+        this.status = response.status;
+        this.statusText = response.statusText;
       },
   
       async actionDeleteUser(id: any) {
         const response = await axiosInstance.post('user/delete', {
           idPerson: id,
         });
-        // this.status = response.status;
-        // this.statusText = response.statusText;
-        console.log(response);
+        this.status = response.status;
+        this.statusText = response.statusText;
+      },
+
+      async actionSearchMetric() {
+        const response = await axiosInstance.get(`user/graphics/2`);
+        if (response.data) {
+          return response.data;
+        }
+        return [];
+      },
+
+      async fetchSearchMetricUser(documentNunber: number | null) {
+        const response = await axiosInstance.get(`user/graphics-identification/${documentNunber}`);
+        if (response.data) {
+          return response.data;
+        }
+        return [];
       },
   
       setUser(item: any) {
@@ -80,7 +99,7 @@ export const storeUsers = defineStore('userStore', {
         if (value.trim() === '') {
           this.users = this.usersOrigin;
         } else { 
-          this.users = this.users.filter(item =>
+          this.users = this.users.filter((item: any) =>
             item.nameAll.toLowerCase().includes(value) ||
             item.identification.toString().includes(value)
           );

@@ -11,15 +11,10 @@
                 <app-input
                 v-model="searchQuery"
                 type="text"
-                label="Ingrese valor"
+                label="Ingrese la Función, Categoría o Pregunta"
+                maxLength="50"
                 id="name-input"
-                @keyup.enter="searchQuestion"
               />
-            </div>
-            <div class="w-1/4 ml-5">
-                <button @click="searchQuestion" class="bg-blue-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                    Buscar
-                  </button>
             </div>
           </div>
         <div class="mt-8 mx-9">
@@ -43,7 +38,7 @@
         <button class="text-blue-500 hover:text-blue-700" @click="editQuestion(item)">
           <PencilIcon class="h-6 w-6" />
         </button>
-        <button class="text-red-500 hover:text-red-700 ml-4" @click="openDialog(item.id)">
+        <button class="text-red-500 hover:text-red-700 ml-4" @click="openDialog(item.idQuestion)">
           <TrashIcon class="h-6 w-6" />
         </button>
       </td>
@@ -65,7 +60,7 @@
 <script setup>
 import appInput from '../utils/appInput.vue';
 import { useRouter } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue'; // Asegúrate de importar 'computed'
 import { useQuestion } from '@/composables/useQuestion';
 import { useQuestionStore } from '../stores/useQuestionStore';
 import Modal from '../utils/appModal.vue';
@@ -75,15 +70,21 @@ import { useToast } from "vue-toastification";
 const router = useRouter();
 const toast = useToast()
 const { getQuestions, filteredQuestion, setQuestion } = useQuestionStore();
-const { questions, fetchDeleteQuestion, messageText } = useQuestion();
+const { fetchDeleteQuestion, messageText } = useQuestion();
 
 const searchQuery = ref(null);
 const showModal = ref(false);
 const idQuestion = ref(null);
 
+const questions = computed(() => useQuestionStore().questions);
+
 onMounted(async () => {
   await getQuestions();
 })
+
+watch(searchQuery, (newValue) => {
+  filteredQuestion(newValue || '');
+});
 
 const openDialog = (id) => {
   showModal.value = true;
@@ -95,14 +96,18 @@ const editQuestion = (item) => {
   router.push({ name: 'register-question', params: { id: item.idQuestion } })
 }
 
+watch(searchQuery, (newValue) => {
+  filteredQuestion(newValue);
+});
+
 const deleteQuestion = async () => {
   await fetchDeleteQuestion(idQuestion.value);
-  toast.success(messageText.value);
+  toast.success('Se eliminó la pregunta correctamente.');
   await getQuestions();
 }
 
 const searchQuestion = () => {
-  const query = searchQuery.value.toLowerCase();
+  const query = searchQuery.value && searchQuery.value.toLowerCase();
   filteredQuestion(query)
 }
 </script>

@@ -23,6 +23,7 @@
         <button
           class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
           @click="closeModal"
+          v-if="showClose"
         >
           No
         </button>
@@ -38,6 +39,10 @@ const props = defineProps({
   isOpen: Boolean,
   title: String,
   message: String,
+  showClose: {
+    default: true,
+    type: Boolean,
+  },
 });
 
 const emit = defineEmits(['update:isOpen', 'confirm']);

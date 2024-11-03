@@ -5,12 +5,24 @@ export function useForm() {
   const userStore = useFormStore();
 
   // Expose store actions
-  const getQuestions = userStore.fetchQuestion;
+  const fetchQuestions = userStore.getQuestionIdentification;
   const getIdentify = computed(() => userStore.questionsIdentify);
+  const getDetected = computed(() => userStore.questionDetect);
+  const getProtect = computed(() => userStore.questionProtect);
+  const getRecover = computed(() => userStore.questionRecover);
+  const getRespond = computed(() => userStore.questionRespond);
   const getForm = computed(() => userStore.forms);
+  const getShowFinished = computed(() => userStore.showFinish);
+  const fetchUpdate = userStore.resetQuestion;
 
   return {
-    getQuestions,
+    fetchUpdate,
+    getDetected,
+    getProtect,
+    getRecover,
+    getRespond,
+    getShowFinished,
+    fetchQuestions,
     getIdentify,
     getForm,
   };

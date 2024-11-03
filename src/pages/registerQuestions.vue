@@ -2,12 +2,11 @@
 import { useRouter, useRoute } from 'vue-router';
 import  { useQuestion } from '../composables/useQuestion';
 import  { useQuestionStore } from '../stores/useQuestionStore';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useToast } from "vue-toastification";
 import appSelect from '@/utils/appSelect.vue';
 import appInput from '@/utils/appInput.vue';
 import Modal from '../utils/appModal.vue';
-import { getFunction, getCategory } from '@/utils/globalVariables';
 
 const toast = useToast()
 const showModal = ref(false);
@@ -16,11 +15,21 @@ const route = useRoute();
 const userId = route.params.id;
 const { modelQuestion, fetchRegisterQuestion, getFunctions, getCategories } = useQuestion();
 const { getCatalog, setFunction } = useQuestionStore();
+const disabledCategory = ref(true);
+const textModal = ref('');
 
 onMounted(async () => {
   await getCatalog();
+  if (userId) {
+    disabledCategory.value = false;
+  }
 })
-
+const setModelFunction = (value: number) => {
+  modelQuestion.value.functionQuestions = value;
+  disabledCategory.value = false;
+  modelQuestion.value.categoryQuestions = null;
+  setFunction(value);
+}
 
 onUnmounted(() => {
   modelQuestion.value.nameQuestions = null;
@@ -61,24 +70,50 @@ const saveQuestion = async () => {
   toast.success(`Se ${message} correctamente.`);
   router.push({ name: 'gestors-question' })
 }
+
+const openModal = () => {
+
+  const validOptions = modelQuestion.value.options && modelQuestion.value.options.every(p => p.optionName != null && p.optionName.length > 0);
+  if (!modelQuestion.value.functionQuestions || !modelQuestion.value.categoryQuestions || !modelQuestion.value.nameQuestions || !validOptions) {
+    toast.warning('Debe completar todos los campos obligatorios');
+    return;
+  }
+
+  // Verificar si hay errores de validación
+  if (computedMessageQuestion.value || modelQuestion.value.options.some(p => p.optionName && p.optionName.length > 100)) {
+    toast.warning('Debe completar los campos correctamente');
+    return;
+  }
+  showModal.value = true;
+  textModal.value = userId ? '¿Desea actualizar los datos de la pregunta ?' : '¿Desea registrar la nueva pregunta?';
+}
+
+const computedMessageQuestion = computed(() => {
+      if (modelQuestion.value.nameQuestions && modelQuestion.value.nameQuestions.length > 200)
+       {
+        return 'La Pregunta no debe ser mayor a 200 caracteres';
+      }
+      return '';
+    });
+
 </script>
 
 <template>
-    <main class="flex items-center justify-center h-screen">
-        <div class="w-1/3 mx-auto p-6 bg-white shadow-md rounded-lg">
-            <h1 class="text-2xl font-bold mb-4">  {{ userId ? 'Actualizar' : 'Registrar nueva' }}  pregunta</h1>
-              <div class="flex justify-between">
-                <div class="mb-7 w-64">
+  <main class="flex items-center justify-center h-screen">
+      <div class="w-1/3 mx-auto p-6 bg-white shadow-md rounded-lg">
+          <h1 class="text-2xl font-bold mb-4">{{ userId ? 'Actualizar' : 'Registrar nueva' }} pregunta</h1>
+          <div class="flex justify-between">
+              <div class="mb-7 w-64">
                   <label class="block text-sm font-medium text-gray-700 mb-1">Función NIST</label>
-                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" v-model="modelQuestion.functionQuestions" @update:modelValue="setFunction($event)" />
-                </div>
-                <div class="mb-7 ml-3 w-64">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-                    <app-select :options="getCategories" :disabled="!modelQuestion.functionQuestions" :model-value="modelQuestion.categoryQuestions" v-model="modelQuestion.categoryQuestions" />
-                  </div>
+                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" @update:modelValue="setModelFunction($event)" />
               </div>
-              <div class="mb-7">
-                <app-input
+              <div class="mb-7 ml-3 w-64">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+                  <app-select :options="getCategories" :disabled="disabledCategory" :model-value="modelQuestion.categoryQuestions" @update:modelValue="modelQuestion.categoryQuestions = $event"/>
+              </div>
+          </div>
+          <div class="mb-7">
+              <app-input
                   v-model="modelQuestion.nameQuestions"
                   id="question"
                   name="question"
@@ -86,43 +121,42 @@ const saveQuestion = async () => {
                   label="Pregunta"
                   required
                   placeholder="Ingrese la pregunta"
-                />
-              </div>
-              <div class="mb-7" v-for="(item, index) in modelQuestion.options" :key="index">
-                <app-input
-                v-model="item.optionName"
-									type="text"
-									:label="item.label"
-									placeholder="Ingresar alternativa"
-									required
-									id="name-password"
-								/>
-              </div>
-                <div class="flex items-center">
-                  <button
-                  @click="router.push({ name: 'gestors-question' });"
-                class="w-full py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Cancelar
-              </button>
-                <button
-                  type="button"
-                  @click="showModal = true"
-                  class="w-full ml-3 py-2 px-4 bg-blue-500  text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  {{ userId ? 'Actualizar' : 'Registrar' }}
-                </button>
-                </div>
-              
+              />
+              <p v-if="computedMessageQuestion" class="text-red-500 mt-1">{{ computedMessageQuestion }}</p>
           </div>
-          <Modal
-            :isOpen="showModal"
-            title="Confirmación"
-            message="¿Desea registrar la nueva pregunta?"
-            @update:isOpen="showModal = $event"
-            @confirm="saveQuestion"
-          />
-          <!-- @update:isOpen="showModal = $event"
-          @confirm="saveUsers" -->
-    </main>
-  </template>
+          <div class="mb-7" v-for="(item, index) in modelQuestion.options" :key="index">
+              <app-input
+                  v-model="item.optionName"
+                  type="text"
+                  :label="item.label"
+                  placeholder="Ingresar alternativa"
+                  required
+                  id="name-password"
+              />
+              <p class="text-red-500 mt-1">{{ item.optionName && item.optionName.length > 100 ? 'No debe ser mayor a 100 caracteres' : '' }}</p>
+          </div>
+          <div class="flex items-center">
+              <button
+                  @click="router.push({ name: 'gestors-question' })"
+                  class="w-full py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                  Cancelar
+              </button>
+              <button
+                  type="button"
+                  @click="openModal"
+                  class="w-full ml-3 py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                  {{ userId ? 'Actualizar' : 'Registrar' }}
+              </button>
+          </div>
+      </div>
+      <Modal
+          :isOpen="showModal"
+          title="Confirmación"
+          :message="textModal"
+          @update:isOpen="showModal = $event"
+          @confirm="saveQuestion"
+      />
+  </main>
+</template>

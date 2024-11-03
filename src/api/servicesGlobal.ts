@@ -1,18 +1,24 @@
 import axios from 'axios';
 
-const API_URL = 'https://question-jav.up.railway.app/'; // Reemplaza con tu URL de API
+const API_URL = 'https://cyberguard.up.railway.app/'; // Reemplaza con tu URL de API
 
 export const getLogin = async (data: any) => {
-    console.log(data);
   try {
     const body = {
       identification: data.documentNumber,
         password: data.password,
     };
-    const response = await axios.post(`${API_URL}login`, body);
+    try {
+      const response = await axios.post(`${API_URL}login`, body);
+      console.log(response);
     return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Error fetching users');
+    } catch (error) {
+      throw error;
+    }
+  } catch (error: any) {
+    if (error.response.status == 401) {
+      return error.response.data;
+    }
   }
 };
 
@@ -29,12 +35,6 @@ axiosInstance.interceptors.request.use(config => {
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-     // Modificar o agregar datos al payload de la solicitud
-    //  if (config.data) {
-    //   config.data = {
-    //     ...config.data,
-    //   };
-    // }
 
     return config;
   }, error => {

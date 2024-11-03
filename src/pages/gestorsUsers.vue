@@ -4,7 +4,7 @@ import { useUser } from '@/composables/useUsers';
 import { storeUsers } from '../stores/useUserStore';
 import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { useRouter } from 'vue-router';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import Modal from '@/utils/appModal.vue';
 import { useToast } from "vue-toastification";
 
@@ -12,22 +12,30 @@ const toast = useToast()
 const router = useRouter();
 const showModal = ref(false);
 const idUser = ref(null);
-// const storeUser = storeUsers()
 const { getHttpUser, setUser, filteredUsers, actionDeleteUser } = storeUsers();
 const { users, fetchUsers } = useUser();
 
-const searchQuery = ref(null);
+const searchQuery = ref<string | null>('');
 
+const user = computed(() => useUser().users);
 
 onMounted(async () => {
   await getHttpUser();
 })
 
+watch(searchQuery, (newValue) => {
+  filteredUsers(newValue || '');
+});
+
 const deleteUser = async () => {
   await actionDeleteUser(idUser.value);
   await getHttpUser();
-  toast.success('Se desactivo el usuario correctamente.');
+  toast.success('Se eliminó el usuario correctamente.');
 }
+
+watch(searchQuery, (newValue) => {
+  filteredUsers(newValue);
+});
 
 const editUser = (item: any) => {
   setUser(item);
@@ -39,22 +47,14 @@ const openDialog = (id: any) => {
   idUser.value = id;
 }
 
-// const searchQuery = computed(() => {
-//   const query = this.searchQuery.toLowerCase();
-//       return this.tableData.filter(item =>
-//         item.name.toLowerCase().includes(query) ||
-//         item.age.toString().includes(query)
-//       );
-// }) 
-
 const searchUsers = () => {
-  const query = searchQuery.value.toLowerCase();
+  const query = searchQuery.value && searchQuery.value.toLowerCase();
   filteredUsers(query)
 }
 </script>
 
 <template>
-    <div>
+    <div class="mt-10">
         <h1 class="text-4xl font-bold text-gray-900 text-center">Gestión de usuarios</h1>
         <div class="flex justify-end px-8 mt-3">
             <button @click="router.push({ name: 'register-user' })" class="bg-blue-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
@@ -66,15 +66,11 @@ const searchUsers = () => {
                 <app-input
                 v-model="searchQuery"
                 type="text"
-                label="Ingrese valor"
+                label="Ingrese Nombre o DNI"
                 required
                 id="name-input"
+                maxLength="50"
               />
-            </div>
-            <div class="w-1/4 ml-5">
-                <button @click="searchUsers" class="bg-blue-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                    Buscar
-                  </button>
             </div>
           </div>
         <div class="mt-8 mx-9">
@@ -83,13 +79,13 @@ const searchUsers = () => {
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro.</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre completo</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro. DNI</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro. Doc. Id.</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="item in users" :key="item.id" class="hover:bg-gray-100">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.number }}</td>
+            <tr v-for="(item, index) in users" :key="index" class="hover:bg-gray-100">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.number || 0 }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate">{{ item.nameAll }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.identification }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -107,7 +103,7 @@ const searchUsers = () => {
         <Modal
         :isOpen="showModal"
         title="Confirmación"
-        message="Desea eliminar la pregunta"
+        message="Desea eliminar el usuario?"
         @update:isOpen="showModal = $event"
         @confirm="deleteUser"
       />

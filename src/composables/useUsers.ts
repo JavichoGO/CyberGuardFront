@@ -12,20 +12,23 @@ export function useUser() {
   const messageStatus = computed(() => userStore.statusText);
 
   // Expose store actions
-  const fetchUsers = userStore.getUsers;
+  const fetchUsers = userStore.getHttpUser;
   const fetchRegisterUser = userStore.registerUser;
   const fetchUpdateUser = userStore.actionUpdateUser;
   const fetchDeleteU = userStore.actionDeleteUser;
-
+  const fetchSearchMetric = userStore.actionSearchMetric;
+  const fetchSearchMetricUser = userStore.fetchSearchMetricUser;
   return {
     modelUser,
     users,
     response,
     messageStatus,
+    fetchSearchMetricUser,
     fetchUsers,
     fetchRegisterUser,
     fetchUpdateUser,
     fetchDeleteU,
+    fetchSearchMetric,
     usersOrigin,
   };
 }
