@@ -101,6 +101,7 @@ onMounted(async () => {
       }
     }
   } else if (roleCode.value === 'ROLE_USER') {
+    // Cargar automáticamente la gráfica o mensaje para el usuario con rol "USER"
     documentNumberUser.value = parseInt(sessionStorage.getItem('identification') || '0');
     if (documentNumberUser.value) {
       const response = await fetchSearchMetricUser(documentNumberUser.value);
@@ -109,17 +110,16 @@ onMounted(async () => {
           item.desired = index < 2 ? 4 : index < 4 ? 3 : 4;
           return item;
         });
-        updateChartData(dataMetrics.value, false); // Usa functionDescription para el gráfico
-      } else {
-        showMetric.value = false;
-        textNothing.value = response.message === "Sin datos para mostrar"
-          ? "El encuestado seleccionado aún no ha enviado el cuestionario"
-          : response.message;
+        updateChartData(dataMetrics.value, false);
+        showMetric.value = true; // Mostrar la gráfica
       }
     } else {
-      showMetric.value = false;
-      textNothing.value = "No se pudo obtener el código de usuario para mostrar los datos.";
-    }
+      const response = await fetchSearchMetricUser(documentNumberUser.value);
+        showMetric.value = false; // Ocultar la gráfica
+        textNothing.value = response.message === "Sin datos para mostrar"
+          ? "El encuestado seleccionado aún no ha enviado el cuestionario"
+          : response.message || "No hay datos disponibles";
+      }
   }
 });
 
@@ -136,18 +136,31 @@ const searchMetrics = async () => {
     myChart = null;
   }
 
+
+
+  // Realizar la búsqueda de métricas del usuario
   const response = await fetchSearchMetricUser(documentNumberUser.value);
-  if (response && response.data && response.data.function.length > 0) {
+  
+  if (response && response.data && response.data.function && response.data.function.length > 0) {
+    // Actualizar los datos del gráfico con los nuevos datos del usuario
     dataMetrics.value = response.data.function;
+    chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
+    chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
+    chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
     const useCategoryDescription = roleCode.value === 'ROLE_ADMIN' && modelMetric.value === 1;
     updateChartData(dataMetrics.value, useCategoryDescription);
-    showMetric.value = true;
+    showMetric.value = true; // Mostrar el gráfico
+
   } else {
+    // Mostrar el mensaje de que no hay datos y ocultar el gráfico
     showMetric.value = false;
-    textNothing.value = response.message || "Sin datos para mostrar";
+    textNothing.value = response.message === "Sin datos para mostrar" 
+      ? "El encuestado seleccionado aún no ha enviado el cuestionario" 
+      : response.message;
+
+    // Destruir el gráfico si no hay datos
   }
 };
-
 
 
 const optionsMetrics = [
@@ -166,22 +179,29 @@ const setMetric = async (value: any) => {
   textNothing.value = null;
   modelMetric.value = value;
 
+  // Limpiar los datos previos del gráfico
   chartData.value.labels = [];
   chartData.value.datasets[0].data = [];
   chartData.value.datasets[1].data = [];
 
   if (myChart) {
-    myChart.destroy();
+    myChart.destroy(); // Destruir el gráfico previo si existe
     myChart = null;
   }
-  
   if (value == 1) {
+    // Métricas generales
+    valueMetric.value = false;
     const response = await fetchSearchMetric();
     if (response && response.data.function.length > 0) {
       dataMetrics.value = response.data.function;
-      updateChartData(dataMetrics.value, true); // Métricas generales con categoryDescription
+      chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
+      chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
+      chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
+      
+      createChart(); // Crear el gráfico con las métricas generales
     }
   } else if (value == 2) {
+    // Métricas por usuario
     await getHttpUser();
     showMetric.value = false;
     valueMetric.value = true;
@@ -254,7 +274,7 @@ const config: any = {
         </div>
       </div>
       </div>
-    <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center">
       <div class="flex w-1/2" v-if="showMetric">
         <canvas id="myRadar" class="radar-chart"></canvas>
       </div>
@@ -270,6 +290,7 @@ const config: any = {
       </button>
       <button @click="generateContramedidasPDF" class="bg-green-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 ml-4">
         Generar contramedidas
+    
       </button>
     </div>
     
