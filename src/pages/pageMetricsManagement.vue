@@ -115,8 +115,10 @@ onMounted(async () => {
     } else {
       // Si no hay datos, mostrar el mensaje adecuado
       showMetric.value = false; // Asegurarse de ocultar la gráfica si no hay datos
-      textNothing.value = response.message || "No hay datos disponibles"; // Mostrar mensaje del backend o mensaje por defecto
-    }
+      textNothing.value = response.message === "Sin datos para mostrar" 
+        ? "Debe completar la encuesta previamente" 
+        : response.message || "No hay datos disponibles"; // Mostrar el mensaje específico
+        }
   } else {
     // En caso de que no se pueda obtener el código del usuario
     showMetric.value = false;
@@ -160,7 +162,7 @@ const searchMetrics = async () => {
     // Mostrar el mensaje de que no hay datos y ocultar el gráfico
     showMetric.value = false;
     textNothing.value = response.message === "Sin datos para mostrar" 
-      ? "El encuestado seleccionado aún no ha enviado el cuestionario" 
+      ? "El encuestado seleccionado aún no ha completado el cuestionario" 
       : response.message;
 
     // Destruir el gráfico si no hay datos
@@ -282,8 +284,8 @@ const config: any = {
     </div>
 
     <!-- Gráfico o mensaje "Sin datos para mostrar" -->
-    <div class="flex items-center justify-center">
-      <div class="flex w-1/2" v-if="showMetric">
+    <div class="flex items-center justify-center flex-grow w-full mt-10">
+      <div class="flex justify-center w-full" v-if="showMetric">
         <canvas id="myRadar" class="radar-chart"></canvas>
       </div>
       <div v-else class="flex justify-center">
@@ -291,21 +293,24 @@ const config: any = {
       </div>
     </div>
 
-    <!-- Botones de acciones, visibles solo si showMetric es true -->
-    <div class="flex justify-center" v-if="showMetric">
-      <button @click="printMetric" class="bg-blue-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none">
-        Descargar
-      </button>
-      <button @click="generateContramedidasPDF" class="bg-green-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-4">
-        Generar contramedidas
-      </button>
-    </div>
+<!-- Botones de acciones, visibles solo si showMetric es true -->
+<div class="flex justify-center mt-5" v-if="showMetric">
+  <button @click="printMetric" class="bg-blue-500 text-center text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none"
+          :class="{ 'ml-4': roleCode !== 'ROLE_USER' }">
+    Descargar
+  </button>
+  <button v-if="roleCode !== 'ROLE_USER'" @click="generateContramedidasPDF" class="bg-green-500 text-right text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-4">
+    Generar contramedidas
+  </button>
+</div>
+
   </div>
 </template>
 
 
 
 <style>
+
 .radar-chart {
   width: 490px !important; /* Ancho fijo */
   height: 510px !important; /* Alto fijo */
