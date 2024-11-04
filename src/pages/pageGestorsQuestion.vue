@@ -80,8 +80,8 @@ const searchQuestion = () => {
           <tr>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nro.</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Función NIST</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs truncate">Categoria</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-md truncate">Pregunta</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ">Pregunta</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
           </tr>
         </thead>
@@ -89,8 +89,8 @@ const searchQuestion = () => {
           <tr v-for="item in questions" :key="item.id" class="hover:bg-gray-100">
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.number }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.functionQuestionsDescription }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate" :title="item.categoryQuestionsDescription">{{ item.categoryQuestionsDescription }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-2xl truncate" :title="item.nameQuestions">{{ item.nameQuestions }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-[12rem] truncate" :title="item.categoryQuestionsDescription">{{ item.categoryQuestionsDescription }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-[30rem] truncate" :title="item.nameQuestions">{{ item.nameQuestions }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <button class="text-blue-500 hover:text-blue-700" @click="editQuestion(item)">
                 <PencilIcon class="h-6 w-6" />
