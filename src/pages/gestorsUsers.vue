@@ -14,10 +14,13 @@ const showModal = ref(false);
 const idUser = ref(null);
 const { getHttpUser, setUser, filteredUsers, actionDeleteUser } = storeUsers();
 const { users, fetchUsers } = useUser();
-
 const searchQuery = ref<string | null>('');
-
 const user = computed(() => useUser().users);
+const surveyAnswered = ref(false);
+const modalTitle = ref<string>('Confirmación');
+const modalMessage = ref<string>('¿Desea eliminar el usuario?');
+
+
 
 onMounted(async () => {
   await getHttpUser();
@@ -42,10 +45,20 @@ const editUser = (item: any) => {
   router.push({ name: 'register-user', params: { id: item.id } })
 }
 
-const openDialog = (id: any) => {
+const openDialog = (id: any, userSurveyAnswered: boolean) => {
   showModal.value = true;
   idUser.value = id;
-}
+  surveyAnswered.value = userSurveyAnswered;
+
+  // Actualizar el título y el mensaje del modal
+  if (userSurveyAnswered) {
+    modalTitle.value = 'Confirmación';
+    modalMessage.value = '¿Desea eliminar al usuario? El usuario ha respondido la encuesta previamente. Se eliminará también la encuesta realizada.';
+  } else {
+    modalTitle.value = 'Confirmación';
+    modalMessage.value = '¿Desea eliminar el usuario?';
+  }
+};
 
 const searchUsers = () => {
   const query = searchQuery.value && searchQuery.value.toLowerCase();
@@ -92,20 +105,20 @@ const searchUsers = () => {
                 <button class="text-blue-500 hover:text-blue-700" @click="editUser(item)">
                   <PencilIcon class="h-6 w-6" />
                 </button>
-                <button class="text-red-500 hover:text-red-700 ml-4" @click="openDialog(item.id)">
-                  <TrashIcon class="h-6 w-6" />
-                </button>
+                <button class="text-red-500 hover:text-red-700 ml-4" @click="openDialog(item.id, item.surveyAnswered)">
+                <TrashIcon class="h-6 w-6" />
+              </button>
               </td>
             </tr>
           </tbody>
         </table>
         </div> 
         <Modal
-        :isOpen="showModal"
-        title="Confirmación"
-        message="Desea eliminar el usuario?"
-        @update:isOpen="showModal = $event"
-        @confirm="deleteUser"
-      />
+  :isOpen="showModal"
+  :title="modalTitle"
+  :message="modalMessage"
+  @update:isOpen="showModal = $event"
+  @confirm="deleteUser"
+/>
     </div>
 </template>

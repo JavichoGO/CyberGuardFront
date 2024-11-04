@@ -8,6 +8,7 @@ interface MyItem {
   nameAll: string;
   identification: string;
   id: string;
+  surveyAnswered:boolean;
 }
 
 export const storeUsers = defineStore('userStore', {
@@ -34,20 +35,18 @@ export const storeUsers = defineStore('userStore', {
         const response2 = await axiosInstance.get('user/list');
         this.usersOrigin = response2?.data.map((row: any, index: number) => {
           return {
-              ...row,
-              number: index + 1,
+            ...row,
+            number: index + 1,
+            surveyAnswered: row.surveyAnswered || false, // Asegurar que se incluye `surveyAnswered`
           };
         });
-        this.users = response2?.data.map((row: any, index: number) => {
-          return {
-              ...row,
-              number: index + 1,
-          };
-        });
-        } catch {
-          console.log('error');
-        }
-      },
+        this.users = [...this.usersOrigin];
+      } catch {
+        console.log('error');
+      }
+    },
+    
+    
   
       async registerUser(userId: any) {
         const response =  userId ? await axiosInstance.put('user/update',this.modelUser) : await axiosInstance.post('user/create',this.modelUser);

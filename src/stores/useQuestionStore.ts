@@ -96,12 +96,16 @@ actions: {
             return {
                 ...row,
                 number: index + 1,
+                replied: row.replied || false, // Incluye el campo 'replied', por defecto false si no está presente
+
             };
         });
         this.questions = response2.data.data.map((row: any, index: number) => {
             return {
                 ...row,
                 number: index + 1,
+                replied: row.replied || false, // Incluye el campo 'replied', por defecto false si no está presente
+
             };
         });
       },
