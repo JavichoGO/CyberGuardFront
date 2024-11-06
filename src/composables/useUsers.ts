@@ -6,7 +6,6 @@ export function useUser() {
 
   // Computed properties to expose store state
   const users = computed(() => userStore.users);
-  const usersOrigin = computed(() => userStore.usersOrigin);
   const modelUser = computed(() => userStore.modelUser);
   const response = computed(() => userStore.status);
   const messageStatus = computed(() => userStore.statusText);
@@ -29,6 +28,5 @@ export function useUser() {
     fetchUpdateUser,
     fetchDeleteU,
     fetchSearchMetric,
-    usersOrigin,
   };
 }
