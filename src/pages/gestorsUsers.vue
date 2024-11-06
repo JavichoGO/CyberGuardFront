@@ -36,10 +36,6 @@ const deleteUser = async () => {
   toast.success('Se eliminó el usuario correctamente.');
 }
 
-watch(searchQuery, (newValue) => {
-  filteredUsers(newValue);
-});
-
 const editUser = (item: any) => {
   setUser(item);
   router.push({ name: 'register-user', params: { id: item.id } })
@@ -60,10 +56,6 @@ const openDialog = (id: any, userSurveyAnswered: boolean) => {
   }
 };
 
-const searchUsers = () => {
-  const query = searchQuery.value && searchQuery.value.toLowerCase();
-  filteredUsers(query)
-}
 </script>
 
 <template>
