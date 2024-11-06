@@ -19,6 +19,18 @@ const showMetric = ref<boolean | null>(true);
 const fullName = ref<string | null>('');
 const documentNumberUser = ref<number | null>(null);
 const textNothing = ref<string | null>(null);
+const desiredValues = ref<Record<number, number>>({});
+
+// Función para actualizar los valores de "desired"
+const updateDesiredValues = (data: any) => {
+  data.forEach((item: Function) => {
+    if (typeof desiredValues.value[item.idFunction] === 'undefined') {
+      // Solo inicializamos si no hay valor almacenado
+      desiredValues.value[item.idFunction] = item.desired || 0;
+    }
+    item.desired = desiredValues.value[item.idFunction];
+  });
+};
 
 interface Function {
   average: number;
@@ -31,25 +43,35 @@ interface Function {
 
 fullName.value = sessionStorage.getItem('full-name');
 const dataMetrics = ref<any>([]);
-    const chartData = ref({
-      labels: [],
-      datasets: [
-        {
-          label: 'Madurez Actual',
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          data: [],
-        },
-        {
-          label: 'Madurez Deseada',
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          data: [],
-        },
-      ],
-    });
+  const chartData = ref<{
+  labels: string[];
+  datasets: {
+    label: string;
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: number;
+    data: number[];
+  }[];
+}>({
+  labels: [],
+  datasets: [
+    {
+      label: 'Madurez Actual',
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgba(255, 99, 132, 1)',
+      borderWidth: 1,
+      data: [],
+    },
+    {
+      label: 'Madurez Deseada',
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1,
+      data: [],
+    },
+  ],
+});
+
 
     Chart.register(...registerables);
 
@@ -67,13 +89,30 @@ const createChart = () => {
   }
 };
 
-// Función para actualizar el gráfico con los datos adecuados
+// Función para inicializar o actualizar los valores de "desired"
+const initializeDesiredValues = (data: any) => {
+  data.forEach((item: Function, index: number) => {
+    // Solo inicializar si no existe un valor previo almacenado
+    if (!(item.idFunction in desiredValues.value)) {
+      desiredValues.value[item.idFunction] = index === 0 ? 3 : 4;
+    }
+  });
+};
+
+// Modificar el método `updateChartData` para ordenar los datos según el orden deseado
 const updateChartData = (data: any, useCategoryDescription: boolean) => {
-  chartData.value.labels = data.map((item: Function) => 
+  // Ordenar los datos en base al idFunction en el orden deseado
+  const order = [1, 5, 12, 15, 20];
+  const orderedData = order.map((id) => data.find((item: Function) => item.idFunction === id)).filter(Boolean);
+
+  initializeDesiredValues(orderedData); // Inicializar los valores de "desired" si es necesario
+
+  // Actualizar los datos del gráfico
+  chartData.value.labels = orderedData.map((item: Function) =>
     useCategoryDescription ? item.categoryDescription || 'N/A' : item.functionDescription || 'N/A'
   );
-  chartData.value.datasets[0].data = data.map((item: Function) => item.average);
-  chartData.value.datasets[1].data = data.map((item: Function) => item.desired || 0);
+  chartData.value.datasets[0].data = orderedData.map((item: Function) => item.average);
+  chartData.value.datasets[1].data = orderedData.map((item: Function) => desiredValues.value[item.idFunction]);
   createChart(); // Crear o actualizar el gráfico
 };
 
@@ -83,52 +122,51 @@ onMounted(async () => {
       // Servicio de métricas generales
       const response = await fetchSearchMetric();
       if (response && response.data.function.length > 0) {
-        dataMetrics.value = response.data.function.map((item: any, index: number) => {
-          item.desired = index < 2 ? 4 : index < 4 ? 3 : 4; // Asigna `desired` basado en el índice
-          return item;
-        });
+        dataMetrics.value = response.data.function.map((item: any) => ({
+          ...item,
+          desired: desiredValues.value[item.idFunction] ?? (item.desired ?? 0),
+        }));
         updateChartData(dataMetrics.value, true); // Usa categoryDescription para el gráfico
       }
     } else if (modelMetric.value === 2) {
       // Servicio de métricas por usuario
       const response = await fetchSearchMetricUser(documentNumberUser.value);
       if (response && response.data.function.length > 0) {
-        dataMetrics.value = response.data.function.map((item: any, index: number) => {
-          item.desired = index < 2 ? 4 : index < 4 ? 3 : 4;
-          return item;
-        });
+        dataMetrics.value = response.data.function.map((item: any) => ({
+          ...item,
+          desired: desiredValues.value[item.idFunction] ?? (item.desired ?? 0),
+        }));
         updateChartData(dataMetrics.value, false); // Usa functionDescription para el gráfico
       }
     }
-  }  else if (roleCode.value === 'ROLE_USER') {
-  // Cargar automáticamente la gráfica o mensaje para el usuario con rol "USER"
-  documentNumberUser.value = parseInt(sessionStorage.getItem('identification') || '0');
-  if (documentNumberUser.value) {
-    const response = await fetchSearchMetricUser(documentNumberUser.value);
-    if (response && response.data && response.data.function && response.data.function.length > 0) {
-      dataMetrics.value = response.data.function.map((item: any, index: number) => {
-        item.desired = index < 2 ? 4 : index < 4 ? 3 : 4;
-        return item;
-      });
-      updateChartData(dataMetrics.value, false);
-      showMetric.value = true; // Mostrar la gráfica
+  } else if (roleCode.value === 'ROLE_USER') {
+    // Cargar automáticamente la gráfica o mensaje para el usuario con rol "USER"
+    documentNumberUser.value = parseInt(sessionStorage.getItem('identification') || '0');
+    if (documentNumberUser.value) {
+      const response = await fetchSearchMetricUser(documentNumberUser.value);
+      if (response && response.data && response.data.function && response.data.function.length > 0) {
+        dataMetrics.value = response.data.function.map((item: any) => ({
+          ...item,
+          desired: desiredValues.value[item.idFunction] ?? (item.desired ?? 0),
+        }));
+        updateChartData(dataMetrics.value, false);
+        showMetric.value = true;
+      } else {
+        // Si no hay datos, mostrar el mensaje adecuado
+        showMetric.value = false; // Asegurarse de ocultar la gráfica si no hay datos
+        textNothing.value = response.message === "Sin datos para mostrar"
+          ? "Debe completar la encuesta previamente"
+          : response.message || "No hay datos disponibles"; // Mostrar el mensaje específico
+      }
     } else {
-      // Si no hay datos, mostrar el mensaje adecuado
-      showMetric.value = false; // Asegurarse de ocultar la gráfica si no hay datos
-      textNothing.value = response.message === "Sin datos para mostrar" 
-        ? "Debe completar la encuesta previamente" 
-        : response.message || "No hay datos disponibles"; // Mostrar el mensaje específico
-        }
-  } else {
-    // En caso de que no se pueda obtener el código del usuario
-    showMetric.value = false;
-    textNothing.value = "No se pudo obtener el código de usuario para mostrar los datos.";
+      // En caso de que no se pueda obtener el código del usuario
+      showMetric.value = false;
+      textNothing.value = "No se pudo obtener el código de usuario para mostrar los datos.";
+    }
   }
-}
-
-
-
 });
+
+
 
 
 const valueMetric = ref<boolean | null>(false);
@@ -200,12 +238,11 @@ const setMetric = async (value: any) => {
     valueMetric.value = false;
     const response = await fetchSearchMetric();
     if (response && response.data.function.length > 0) {
-      dataMetrics.value = response.data.function;
-      chartData.value.labels = response.data.function.map((item: Function) => item.categoryDescription);
-      chartData.value.datasets[0].data = response.data.function.map((item: Function) => item.average);
-      chartData.value.datasets[1].data = response.data.function.map((item: Function) => item.desired || 0);
-      
-      createChart(); // Crear el gráfico con las métricas generales
+      dataMetrics.value = response.data.function.map((item: any) => ({
+        ...item,
+        desired: desiredValues.value[item.idFunction] ?? (item.desired ?? 0)
+      }));
+      updateChartData(dataMetrics.value, true);
     }
   } else if (value == 2) {
     // Métricas por usuario

@@ -99,64 +99,77 @@ const computedMessageQuestion = computed(() => {
 </script>
 
 <template>
-  <main class="flex items-center justify-center h-screen">
-      <div class="w-1/3 mx-auto p-6 bg-white shadow-md rounded-lg">
-          <h1 class="text-2xl font-bold mb-4">{{ userId ? 'Actualizar' : 'Registrar nueva' }} pregunta</h1>
-          <div class="flex justify-between">
-              <div class="mb-7 w-64">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Función NIST</label>
-                  <app-select :options="getFunctions" :model-value="modelQuestion.functionQuestions" @update:modelValue="setModelFunction($event)" />
-              </div>
-              <div class="mb-7 ml-3 w-64">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-                  <app-select :options="getCategories" :disabled="disabledCategory" :model-value="modelQuestion.categoryQuestions" @update:modelValue="modelQuestion.categoryQuestions = $event"/>
-              </div>
-          </div>
-          <div class="mb-7">
-              <app-input
-                  v-model="modelQuestion.nameQuestions"
-                  id="question"
-                  name="question"
-                  type="text"
-                  label="Pregunta"
-                  required
-                  placeholder="Ingrese la pregunta"
-              />
-              <p v-if="computedMessageQuestion" class="text-red-500 mt-1">{{ computedMessageQuestion }}</p>
-          </div>
-          <div class="mb-7" v-for="(item, index) in modelQuestion.options" :key="index">
-              <app-input
-                  v-model="item.optionName"
-                  type="text"
-                  :label="item.label"
-                  placeholder="Ingresar alternativa"
-                  required
-                  id="name-password"
-              />
-              <p class="text-red-500 mt-1">{{ item.optionName && item.optionName.length > 100 ? 'No debe ser mayor a 100 caracteres' : '' }}</p>
-          </div>
-          <div class="flex items-center">
-              <button
-                  @click="router.push({ name: 'gestors-question' })"
-                  class="w-full py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                  Cancelar
-              </button>
-              <button
-                  type="button"
-                  @click="openModal"
-                  class="w-full ml-3 py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                  {{ userId ? 'Actualizar' : 'Registrar' }}
-              </button>
-          </div>
+  <main class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h1 class="text-2xl font-bold mb-4 text-center">{{ userId ? 'Actualizar' : 'Registrar nueva' }} pregunta</h1>
+
+      <!-- Select de Función NIST -->
+      <div class="flex flex-wrap justify-between mb-4">
+        <div class="w-full md:w-1/2 mb-4 md:mb-0 pr-2">
+          <label for="function-nist" class="block text-sm font-medium text-gray-700 mb-1">Función NIST</label>
+          <app-select id="function-nist" :options="getFunctions" :model-value="modelQuestion.functionQuestions" @update:modelValue="setModelFunction($event)" />
+        </div>
+        <div class="w-full md:w-1/2 pl-2">
+          <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+          <app-select id="category" :options="getCategories" :disabled="disabledCategory" :model-value="modelQuestion.categoryQuestions" @update:modelValue="modelQuestion.categoryQuestions = $event" />
+        </div>
       </div>
-      <Modal
-          :isOpen="showModal"
-          title="Confirmación"
-          :message="textModal"
-          @update:isOpen="showModal = $event"
-          @confirm="saveQuestion"
-      />
+
+      <!-- Campo: Pregunta -->
+      <div class="mb-4">
+        <label for="question" class="block text-sm font-medium text-gray-700 mb-1">Pregunta</label>
+        <app-input
+          v-model="modelQuestion.nameQuestions"
+          id="question"
+          name="question"
+          type="text"
+          placeholder="Ingrese la pregunta"
+          required
+          class="mt-1"
+        />
+        <p v-if="computedMessageQuestion" class="text-red-500 mt-1">{{ computedMessageQuestion }}</p>
+      </div>
+
+      <!-- Campos: Opciones de Respuesta -->
+      <div class="mb-4" v-for="(item, index) in modelQuestion.options" :key="index">
+        <label :for="'option-' + index" class="block text-sm font-medium text-gray-700 mb-1">{{ item.label }}</label>
+        <app-input
+          v-model="item.optionName"
+          type="text"
+          :id="'option-' + index"
+          placeholder="Ingresar alternativa"
+          required
+          class="mt-1"
+        />
+        <p class="text-red-500 mt-1">{{ item.optionName && item.optionName.length > 100 ? 'No debe ser mayor a 100 caracteres' : '' }}</p>
+      </div>
+
+      <!-- Botones: Cancelar y Registrar -->
+      <div class="flex flex-wrap items-center justify-between mt-6">
+        <button
+          @click="router.push({ name: 'gestors-question' })"
+          class="flex-grow w-full md:w-auto mb-2 md:mb-0 py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:mr-2"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          @click="openModal"
+          class="flex-grow w-full md:w-auto py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          {{ userId ? 'Actualizar' : 'Registrar' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <Modal
+      :isOpen="showModal"
+      title="Confirmación"
+      :message="textModal"
+      @update:isOpen="showModal = $event"
+      @confirm="saveQuestion"
+    />
   </main>
 </template>
+

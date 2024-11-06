@@ -189,105 +189,123 @@ const isFormValid = computed(() => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-screen">
-    <div class="w-1/3 mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h1 class="text-2xl font-bold mb-4">{{ userId ? 'Actualizar' : 'Registrar nuevo' }} usuario</h1>
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h1 class="text-2xl font-bold mb-4 text-center">{{ userId ? 'Actualizar' : 'Registrar nuevo' }} usuario</h1>
       
       <!-- Mensaje de error general del backend -->
       <div v-if="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
         {{ errorMessage }}
       </div>
-      
+
+      <!-- Campo: Nombre completo -->
       <div class="mb-4">
+        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
         <app-input
           v-model="modelUser.nameAll"
           id="fullName"
           required
           name="fullName"
           type="text"
-          label="Nombre completo"
           placeholder="Ingrese nombre completo"
+          class="mt-1"
         />
         <p v-if="computedMessage" class="text-red-500 mt-1">{{ computedMessage }}</p>
       </div>
+
+      <!-- Campo: Número de Carné de Identidad -->
       <div class="mb-4">
+        <label for="document" class="block text-sm font-medium text-gray-700 mb-1">Número de Carné de Identidad (usuario)</label>
         <app-input
           v-model="modelUser.identification"
           id="document"
           required
           name="document"
           type="text"
-          label="Número de Carné de Identidad (usuario)"
           placeholder="Ingrese número de Carné de Identidad"
           @input="handleIdentificationInput"
+          class="mt-1"
         />
         <p v-if="computedMessageDni" class="text-red-500 mt-1">{{ computedMessageDni }}</p>
       </div>
-      <div class="mb-2">
+
+      <!-- Campo: Cargo -->
+      <div class="mb-4">
+        <label for="position" class="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
         <app-input
           v-model="modelUser.position"
           id="position"
           name="position"
           type="text"
-          label="Cargo"
-          required
           placeholder="Ingrese el cargo"
+          required
+          class="mt-1"
         />
         <p v-if="computedMessagePosition" class="text-red-500 mt-1">{{ computedMessagePosition }}</p>
       </div>
-      <div class="mb-4">
-        <label for="date-picker" class="block text-xs font-medium text-gray-700">Fecha de nacimiento</label>
-  <input
-    type="date"
-    id="date-picker"
-    v-model="modelUser.dateOfBirth"
-    :max="today"
-    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-  />
-  <p v-if="computedMessageDateOfBirth" class="text-red-500 mt-1">{{ computedMessageDateOfBirth }}</p>
-</div>
 
-
+      <!-- Campo: Fecha de Nacimiento -->
       <div class="mb-4">
+        <label for="date-picker" class="block text-sm font-medium text-gray-700 mb-1">Fecha de nacimiento</label>
+        <input
+          type="date"
+          id="date-picker"
+          v-model="modelUser.dateOfBirth"
+          :max="today"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        <p v-if="computedMessageDateOfBirth" class="text-red-500 mt-1">{{ computedMessageDateOfBirth }}</p>
+      </div>
+
+      <!-- Campo: Correo Electrónico -->
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo electronico</label>
         <app-input
           v-model="modelUser.email"
           id="email"
           name="email"
           type="email"
-          required
-          label="Correo electronico"
           placeholder="Ingrese el correo"
+          required
           @blur="emailTouched.value = true"
-          />
-  <p v-if="computedMessageEmail" class="text-red-500 mt-1">{{ computedMessageEmail }}</p>
+          class="mt-1"
+        />
+        <p v-if="computedMessageEmail" class="text-red-500 mt-1">{{ computedMessageEmail }}</p>
       </div>
+
+      <!-- Campo: Contraseña -->
       <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
         <app-input
           v-model="modelUser.password"
           id="password"
           name="password"
-          type="text"
-          label="Contraseña"
-          required
+          type="password"
           placeholder="Ingrese la contraseña"
+          required
+          class="mt-1"
         />
         <p v-if="computedMessagePassword" class="text-red-500 mt-1">{{ computedMessagePassword }}</p>
       </div>
-      <div class="flex items-center">
+
+      <!-- Botones: Cancelar y Registrar -->
+      <div class="flex flex-wrap items-center justify-between mt-6">
         <button
           @click="router.push({ name: 'gestors-user' })"
-          class="w-full py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          class="flex-grow w-full md:w-auto mb-2 md:mb-0 py-2 px-4 bg-red-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:mr-2"
         >
           Cancelar
         </button>
         <button
           @click="openModal"
-          class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ml-3"
+          class="flex-grow w-full md:w-auto py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           {{ userId ? 'Actualizar' : 'Registrar' }}
         </button>
       </div>
     </div>
+
+    <!-- Modal de Confirmación -->
     <Modal
       :isOpen="showModal"
       title="Confirmación"

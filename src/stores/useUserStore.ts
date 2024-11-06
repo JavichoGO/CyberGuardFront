@@ -8,12 +8,15 @@ interface MyItem {
   nameAll: string;
   identification: string;
   id: string;
+  surveyAnswered:boolean;
 }
+
 
 export const storeUsers = defineStore('userStore', {
   state: () => ({
-    users: [] as MyItem[],
-    usersOrigin: [],
+    users: [] as MyItem[], // Almacena la lista actual de usuarios (filtrada)
+    usersOld: [] as MyItem[], // Almacena la lista original sin filtrar
+    
     modelUser: {
       nameAll: null,
       identification: null,
@@ -31,24 +34,18 @@ export const storeUsers = defineStore('userStore', {
   actions: {
     async getHttpUser() {
       try {
-        const response2 = await axiosInstance.get('user/list');
-        this.usersOrigin = response2?.data.map((row: any, index: number) => {
-          return {
-              ...row,
-              number: index + 1,
-          };
-        });
-        this.users = response2?.data.map((row: any, index: number) => {
-          return {
-              ...row,
-              number: index + 1,
-          };
-        });
-        } catch {
-          console.log('error');
-        }
-      },
-  
+        const response = await axiosInstance.get('user/list');
+        this.usersOld = response?.data.map((row: any, index: number) => ({
+          ...row,
+          number: index + 1,
+          surveyAnswered: row.surveyAnswered || false, // Asegurarse de incluir surveyAnswered
+        }));
+        this.users = [...this.usersOld]; // Copiar los usuarios originales a la lista de visualización
+      } catch {
+        console.log('Error al obtener usuarios.');
+      }
+    },
+    
       async registerUser(userId: any) {
         const response =  userId ? await axiosInstance.put('user/update',this.modelUser) : await axiosInstance.post('user/create',this.modelUser);
         this.status = response.status;
@@ -95,15 +92,17 @@ export const storeUsers = defineStore('userStore', {
         this.modelUser.id = item.id;
       },
   
-      filteredUsers(value: any) {
+      filteredUsers(value: string) {
         if (value.trim() === '') {
-          this.users = this.usersOrigin;
-        } else { 
-          this.users = this.users.filter((item: any) =>
-            item.nameAll.toLowerCase().includes(value) ||
-            item.identification.toString().includes(value)
+          this.users = [...this.usersOld]; // Restaurar la lista completa si no hay búsqueda
+        } else {
+          const query = value.toLowerCase().trim();
+          this.users = this.usersOld.filter(
+            (item: any) =>
+              item.nameAll.toLowerCase().includes(query) ||
+              item.identification.toString().includes(query)
           );
         }
-      }
+      }      
   }
 });
